@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <title>{{.Title}} | DSFF</title>
+  <meta name="description" content="Diccionari de Sinònims de Frases Fetes (DSFF), de M.Teresa Espinal">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#760c28">
+  <link rel="stylesheet" href="/main.min.css">
+  {{- if .CanonicalUrl -}}
+    <link rel="canonical" href="{{ .CanonicalUrl }}">
+  {{- end -}}
+  <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="DSFF">
+  <script async data-domain="dsff.uab.cat" src="https://statistics.precarietat.net/js/script.js"></script>
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <div class="text-light"><a href="/" class="navbar-brand">Diccionari de sinònims de frases fetes</a><div>M.Teresa Espinal</div></div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-label="Desplega el menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbar-collapse">
+        <div class="navbar-nav">
+          {{- if not .IsHomepage -}}
+            <a class="nav-item nav-link" href="/">Cerca</a>
+          {{- end -}}
+          <a class="nav-item nav-link" href="/presentacio">Presentació</a>
+          <a class="nav-item nav-link" href="/coneix">Coneix el diccionari</a>
+          <a class="nav-item nav-link" href="/abreviatures">Abreviatures</a>
+          <a class="nav-item nav-link" href="/credits">Crèdits</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container py-4 mt-md-3 mb-md-5">
+    {{- if .IsPresentacioPage -}}
+      <article>
+        <h1>Presentació</h1>
+        <p>El <em>Diccionari de Sinònims de Frases Fetes</em> (a partir d'ara DSFF) és un diccionari que relaciona conceptes amb expressions lexicalitzades de naturalesa gramatical diversa, allò que en la gramàtica tradicional s'han anomenat genèricament <em>locucions i frases fetes</em>. Per a cada expressió es proporciona informació gramatical i lingüística diversa. També s'indiquen relacions de significat amb altres expressions lexicalitzades.</p>
+        <p>Aquesta és la segona versió electrònica en línia del DSFF (primera edició 2018), que incorpora una profunda revisió i actualització de l'obra impresa (primera edició 2004, segona edició 2006). Un 54% dels registres inicials han estat revisats i millorats. Aquesta versió també conté una ampliació significativa de conceptes i d'unitats lexicalitzades: 5.800 entrades conceptuals, 19.600 expressions lexicalitzades i 23.200 registres distints, i és el diccionari de frases fetes més complet de la llengua catalana.</p>
+        <p>Agraeixo la col·laboració de totes les persones que m'han ajudat en aquesta fase, molt especialment, Maria Coll Amengual i Pere Orga.</p>
+        <p>Per a més informació, vegeu <a href="/coneix">coneix el diccionari</a> i els <a href="/credits">crèdits</a>.</p>
+      </article>
+    {{- else if .IsConeixPage -}}
+      <article>
+        <h1>Coneix el diccionari</h1>
+        <p>Aquest <em>Diccionari de Sinònims de Frases Fetes</em> (a partir d'ara DSFF) és un diccionari conceptual d'expressions lexicalitzades, atès que els conceptes s'associen amb expressions lexicalitzades de naturalesa gramatical diversa de la llengua catalana, allò que en la gramàtica tradicional s'han anomenat genèricament locucions i frases fetes.</p>
+        <p>Si ens fixem en allò que hereta d'altres diccionaris de la lexicografia catalana, en primer lloc, aquesta obra manté l'estructura d'un diccionari de sinònims, però la seva característica principal és que a partir de conceptes estableix relacions semàntiques entre expressions lexicalitzades. En segon lloc, el DSFF proporciona la informació gramatical i lingüística referida a cada expressió lexicalitzada. Per informació gramatical s'ha entès el conjunt de propietats que dona compte de la manera com es construeix una expressió lexicalitzada: propietats sintàctiques, semàntiques, lèxiques, morfològiques i fonètiques (si escau). Per informació lingüística s'ha entès el conjunt d'informacions complementàries que en certes ocasions acompanya la descripció d'una expressió lexicalitzada: propietats dialectals (marcatge dialectal d'una expressió i variants dialectals), normatives, etimològiques, etc.</p>
+        <p>Si ens fixem en allò que innova respecte a altres diccionaris, haurem de parlar tant d'aspectes relacionats amb la seva macroestructura com amb la seva microestructura.</p>
+        <p>Primerament, aquesta obra és un diccionari conceptual, que posa a disposició dels usuaris més de 5.800 entrades conceptuals. En aquest sentit s'assembla a un diccionari ideològic, quant a la naturalesa conceptual de les entrades, tot i que difereix dels diccionaris ideològics habituals en el fet que no estableix agrupacions sistemàtiques entre mots aïllats que formen part d'un o de diversos camps semàntics emparentats; el DSFF aprofita les entrades conceptuals per indicar relacions semàntiques i lèxiques de naturalesa diversa entre expressions lexicalitzades. No és ni un diccionari de la llengua, ni un diccionari temàtic, ni un diccionari tradicional de locucions i frases fetes, ni un diccionari de construcció i règim, ni tampoc un diccionari de restriccions lèxiques.</p>
+        <p>Difereix dels diccionaris de la llengua en el fet que proporciona informació d'expressions lexicalitzades a partir del concepte o dels conceptes associats a aquella expressió, però no a partir d'algun dels mots (generalment el darrer o el que es considera central) de l'expressió. Difereix dels diccionaris temàtics quant al mode d'organització d'aquestes expressions lexicalitzades, que en aquesta obra no s'agrupen entorn d'àrees d'interès temàtic (per exemple, les parts del cos, la vestimenta, les relacions socials, etc.), sinó entorn de mots que actuen a mode d'esquer conceptual. Difereix dels diccionaris tradicionals de locucions i frases fetes en tant que allò que té d'innovador és l'associació entre conceptes i expressions lexicalitzades, i no ofereix una simple disposició vertical, alfabètica, d'aquestes expressions, amb la qual cosa les distintes formes que pot adquirir una mateixa expressió lexicalitzada no suposen un obstacle en la seva cerca. Finalment, difereix dels diccionaris de construcció i règim, perquè aquí s'han exclòs de forma genèrica les informacions relatives al règim sintàctic d'unitats lèxiques aïllades, fonamentalment verbs, però també difereix dels diccionaris que analitzen les restriccions semàntiques que els predicats imposen als seus arguments, perquè d'expressions lexicalitzades n'hi ha que tenen naturalesa predicativa, però n'hi ha moltes altres que no són predicats.</p>
+        <p>Segonament, aquest diccionari innova en tant que proporciona informació gramatical i lingüística d'expressions lexicalitzades de categories gramaticals molt diverses, en total 19.600 expressions. Cal notar que, tradicionalment, els diccionaris de la llengua han tractat les expressions lexicalitzades de forma circumstancial i indirecta, especificant per a les entrades d'alguns mots aquells altres mots amb els quals concorren sovint, de vegades de manera fixa. Al DSFF no s'assumeix que l'usuari ja coneix les expressions lexicalitzades aquí descrites, punt que és bàsic en la justificació de la macroestructura de l'obra com a diccionari conceptual.</p>
+        <p>Al DSFF s'ha entès de forma genèrica per <em>frase feta</em> qualsevol expressió supralèxica que constitueix una forma lingüística estereotipada del català, estructura sintagmàtica fixada al lèxic de la llengua, tant si s'ha considerat locució, frase feta o modisme, d'acord amb la lexicologia i la lexicografia tradicionals. L'important és que allò que determina que una seqüència supralèxica esdevingui frase feta és un ús en la llengua relativament fix, de manera que es dona almenys una de les dues condicions següents: (a) el significat de l'expressió lexicalitzada no es pot compondre simplement a partir del significat literal de les seves parts, i / o (b) la forma morfològica o sintàctica de l'expressió lexicalitzada és altament fossilitzada.</p>
+        <p>En tercer lloc, aquesta obra difereix dels diccionaris de locucions i frases fetes existents en la lexicografia catalana, en la quantitat i el tipus d'informació que es proporciona de cadascuna de les expressions lexicalitzades recollides. Al DSFF no es defineixen ni s'exemplifiquen mots, només es defineixen cadenes de restriccions combinatòries particulars entre mots que els parlants natius perceben de forma natural com a expressions fixades i, com que la informació associada amb una expressió lexicalitzada pot diferir en funció del concepte amb el qual s'associa, les 19.600 expressions estan registrades en 23.200 fitxes distintes.</p>
+        <p>Cal tenir present que la informació que el DSFF dona d'aquestes expressions lexicalitzades és alhora intensional i extensional: és intensional perquè es defineix el contingut semàntic de les expressions lexicalitzades en funció d'una determinada relació conceptual i, a més, perquè proporciona referències creuades de naturalesa conceptual amb altres expressions lexicalitzades; és extensional perquè exemplifica l'ús de cada expressió, i alhora dona orientacions que unes vegades restringeixen els paradigmes de mots que poden aparèixer al lema i altres restringeixen la classe lèxica dels arguments seleccionats. Les notes introdueixen restriccions (lèxiques, morfològiques, sintàctiques, semàntiques i discursives) que limiten l'extensionalitat de l'expressió.</p>
+        <p>En quart lloc, aquest diccionari innova en l'especificació de diverses relacions de sentit i múltiples referències creuades amb altres expressions lexicalitzades. Aquestes relacions de sentit han estat agrupades en dos blocs; d'una banda, les relacions de sinonímia i, de l'altra, les relacions semàntiques d'antonímia, inversió argumental i extensió o similitud de significat. Així mateix, respecte a altres diccionaris de locucions i frases fetes, aquest innova en la mesura que introdueix certa informació relativa a variació lingüística, ja siguin variants formals o variants dialectals (quan s'ha disposat de coneixement directe d'aquesta variació).</p>
+        <p>Finalment, i no per això menys important, el DSFF innova en tant que és un diccionari d'ús de la llengua catalana, fonamentalment del català contemporani. Per això, a banda d'incloure exemples per a cada frase feta, en algunes ocasions acompanyats de notes que informen sobre l'ús amb mots altres que els integrants a la forma d'entrada, també informa d'aquelles expressions lexicalitzades, no registrades en cap de les obres lexicogràfiques consultades, que han estat recollides per l'equip redactor, ja sigui de la llengua oral, ja sigui de la llengua literària. Aquestes expressions de nou encuny duen la marca &#x25A0;, que les identifica a l'inici a l'entrada. Com a diccionari d'ús, també informa de la presència en la forma de l'expressió de mots que no són registrats al <em>Diccionari de la Llengua Catalana</em> de l'Institut d'Estudis Catalans o de possibles variants formals (ja siguin normatives o no normatives) que adquireix una expressió concreta.</p>
+        <p>Aquesta versió en línia respecta les darreres normes ortogràfiques de l'IEC, però alhora manté les normes ortogràfiques de les fonts lexicogràfiques consultades.</p>
+        <p>Algunes de les idees que aquí s'han exposat també s'expliquen a:<br>
+          Espinal, M.T. (2000), “Sobre les expressions lexicalitzades”, <em>Els Marges</em>, 67, 7-31.<br>
+          Espinal, M.T. (2003), “Una entrada lèxica. El cas del verb <em>parlar</em>”, <em>Llengua &amp; Literatura</em>, 14, 371-414.<br>
+          Espinal, M.T. (2005), “A conceptual dictionary of Catalan idioms”, <em>International Journal of Lexicography</em>, 18.4, 509-540.</p>
+        <p>Per a més informació referent a les bases lingüístiques del DSFF i els criteris d'elaboració, consulteu <a href="https://ddd.uab.cat/record/89642">https://ddd.uab.cat/record/89642</a>.</p>
+      </article>
+    {{- else if .IsAbreviaturesPage -}}
+      <article class="abreviatures">
+        <h1>Símbols, sigles i abreviatures utilitzats en el diccionari</h1>
+        <h2 id="simbols">Símbols:</h2>
+        <table class="simbols">
+          <tr>
+            <td>*</td>
+            <td>Definició o exemple que no prové de cap obra lexicogràfica, en combinació amb algun altre que està documentat</td>
+          </tr>
+          <tr>
+            <td>&#x25A0;</td>
+            <td>Expressió lexicalitzada respecte a la qual no s'ha trobat cap mena d'informació a les obres lexicogràfiques consultades</td>
+          </tr>
+          <tr>
+            <td>&#x2192;</td>
+            <td>Expressions lexicalitzades relacionades amb la frase feta d'entrada per sinonímia</td>
+          </tr>
+          <tr>
+            <td>&#x25B7;</td>
+            <td>Expressions lexicalitzades relacionades amb la frase feta d'entrada per variant de forma, antonímia, inversió argumental i extensió semàntica</td>
+          </tr>
+          <tr>
+            <td>&#x2022;</td>
+            <td>Expressions lexicalitzades que són variants dialectals respecte a l'expressió d'entrada</td>
+          </tr>
+          <tr>
+            <td>( )</td>
+            <td>
+              S'usen els parèntesis per a indicar:<br>
+              a) les notes d'ús,<br>
+              b) els arguments, en la forma d'entrada de les expressions lexicalitzades i, de vegades també en les definicions,<br>
+              c) la relació lèxica (amb abreviatura) que hi ha entre determinades locucions i la locució d'entrada,<br>
+              d) la categoria sintàctica (abreujada) d'un concepte, en els casos en què cal distingir entre conceptes homònims,<br>
+              e) la informació afegida a les definicions o exemples amb font, i<br>
+              f) la font de la informació referent al marcatge dialectal de l'expressió d'entrada.
+            </td>
+          </tr>
+          <tr>
+            <td>[ ]</td>
+            <td>
+              S'usen els claudàtors per a indicar:<br>
+              a) la informació que se suprimeix de la definició o exemple d'una font lexicogràfica,<br>
+              b) la transcripció fonètica,<br>
+              c) la informació referent a la font de les variants dialectals, i<br>
+              d) la informació referent al marcatge dialectal d'una expressió, així com a la seva naturalesa morfològica o a altres aspectes lèxics específics.
+            </td>
+          </tr>
+        </table>
+        <h2 id="fonts-lexicografiques">Sigles corresponents a fonts lexicogràfiques:</h2>
+        <table class="fonts">
+          <tr>
+            <td>(A-M):</td>
+            <td>Alcover, A. M. - F. de B. Moll, <em>Diccionari Català-Valencià-Balear</em>, 10 vols., Editorial Moll, Palma de Mallorca, 1980-1988.</td>
+          </tr>
+          <tr>
+            <td>(B):</td>
+            <td>Balbastre, J., <em>Nou Recull de Modismes i Frases Fetes. Català-castellà / castellà-català</em>, Editorial Pòrtic, Barcelona.</td>
+          </tr>
+          <tr>
+            <td>(EC):</td>
+            <td>Enciclopèdia Catalana, <em>Diccionari de la Llengua Catalana</em>, Barcelona, 1982, tercera edició ampliada i actualitzada de 1993.<br>
+              Enciclopèdia Catalana, <em>Gran Diccionari de la Llengua Catalana</em>, Barcelona, 1998.<br>Enciclopèdia Catalana, <em>Diccionari Castellà-Català</em>, Barcelona, 1985, segona edició de 1989.</td>
+          </tr>
+          <tr>
+            <td>(ECe):</td>
+            <td>Enciclopèdia Catalana i Universitat Politècnica de Catalunya, <em>Diccionari d'Economia i Gestió</em>, Barcelona, 2001.</td>
+          </tr>
+          <tr>
+            <td>(F):</td>
+            <td>Fabra, P., <em>Diccionari General de la Llengua Catalana</em>, Edhasa, Barcelona, 1932, vint-i-vuitena edició de 1992.</td>
+          </tr>
+          <tr>
+            <td>(Fr):</td>
+            <td>
+              Franquesa, M., <em>Diccionari de Sinònims</em>, Pòrtic, Barcelona, 1971, sisena edició de 1991.<br>
+              Franquesa, M., <em>Diccionari de Sinònims</em>, Enciclopèdia Catalana, Barcelona, 1998. </td>
+          </tr>
+          <tr>
+            <td>(GEC):</td>
+            <td><em>Gran Enciclopèdia Catalana</em>, 15 volums, Barcelona, 1970-1980.</td>
+          </tr>
+          <tr>
+            <td>(DIEC1):</td>
+            <td>Institut d'Estudis Catalans, <em>Diccionari de la Llengua Catalana</em>, Edicions 3i4, Edicions 62, Ed. Moll, Barcelona, 1995.</td>
+          </tr>
+          <tr>
+            <td>(P):</td>
+            <td>Peris, A., <em>Diccionari de Locucions i Frases Llatines</em>, Enciclopèdia Catalana, El Calidoscopi, Barcelona, 2001.</td>
+          </tr>
+          <tr>
+            <td>(PDL):</td>
+            <td>Institut d'Estudis Catalans, <em>Portal de Dades Lingüístiques</em>. http://pdl.iecat.net</td>
+          </tr>
+          <tr>
+            <td>(R-M):</td>
+            <td>
+              Raspall, J. - J. Martí, <em>Diccionari de Locucions i de Frases Fetes</em>, Edicions 62, Barcelona, 1984, quarta edició de 1989.<br>
+              Raspall, J. - J. Martí, <em>Diccionari de Locucions i de Frases Fetes</em>, Edicions 62, Barcelona, 1996, segona edició de 1997.</td>
+          </tr>
+          <tr>
+            <td>(R):</td>
+            <td>Riera Jaume, A., <em>Així Xerram a Mallorca</em>, Hora Nova, Mallorca, 1999.</td>
+          </tr>
+          <tr>
+            <td>(SP):</td>
+            <td>Perramón, S., <em>Proverbis, Dites i Frases Fetes de la Llengua Catalana</em>, Ed. Millà, Barcelona, 1979.</td>
+          </tr>
+          <tr>
+            <td>(T):</td>
+            <td>Termcat. <a href="https://www.termcat.cat/ca/cercaterm">https://www.termcat.cat/ca/cercaterm</a></td>
+          </tr>
+        </table>
+        <h2 id="altres">Abreviatures de categories gramaticals, relacions semàntiques i altres:</h2>
+        <div>
+          <div class="row">
+            <div class="col-sm">
+              <table class="categories">
+                <tr>
+                  <td>adj.</td>
+                  <td>adjectiu</td>
+                </tr>
+                <tr>
+                  <td>adv.</td>
+                  <td>adverbi</td>
+                </tr>
+                <tr>
+                  <td>ant.</td>
+                  <td>antonímia</td>
+                </tr>
+                <tr>
+                  <td>ANT</td>
+                  <td>valor antònim del concepte</td>
+                </tr>
+                <tr>
+                  <td>aprox.</td>
+                  <td>aproximadament</td>
+                </tr>
+                <tr>
+                  <td>conj.</td>
+                  <td>conjunció</td>
+                </tr>
+                <tr>
+                  <td>esp.</td>
+                  <td>especialment</td>
+                </tr>
+                <tr>
+                  <td>etc.</td>
+                  <td>etcètera</td>
+                </tr>
+                <tr>
+                  <td>euf.</td>
+                  <td>eufemisme</td>
+                </tr>
+                <tr>
+                  <td>f.</td>
+                  <td>[substantiu] femení</td>
+                </tr>
+                <tr>
+                  <td>fam.</td>
+                  <td>familiar, familiarment</td>
+                </tr>
+                <tr>
+                  <td>fig.</td>
+                  <td>valor figurat del concepte</td>
+                </tr>
+                <tr>
+                  <td>interj.</td>
+                  <td>interjecció</td>
+                </tr>
+                <tr>
+                  <td>inv.</td>
+                  <td>inversió</td>
+                </tr>
+                <tr>
+                  <td>iròn.</td>
+                  <td>[emprat] irònicament</td>
+                </tr>
+                <tr>
+                  <td>m.</td>
+                  <td>[substantiu] masculí</td>
+                </tr>
+                <tr>
+                  <td>met.</td>
+                  <td>metàfora, metafòric</td>
+                </tr>
+                <tr>
+                  <td>O</td>
+                  <td>oració</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-sm">
+              <table class="categories">
+                <tr>
+                  <td>per ex.</td>
+                  <td>per exemple</td>
+                </tr>
+                <tr>
+                  <td>p.ext.</td>
+                  <td>per extensió</td>
+                </tr>
+                <tr>
+                  <td>pop.</td>
+                  <td>[cançó] popular</td>
+                </tr>
+                <tr>
+                  <td>prep.</td>
+                  <td>preposició</td>
+                </tr>
+                <tr>
+                  <td>pron.</td>
+                  <td>pronom</td>
+                </tr>
+                <tr>
+                  <td>SA</td>
+                  <td>sintagma adjectival</td>
+                </tr>
+                <tr>
+                  <td>SAdv</td>
+                  <td>sintagma adverbial</td>
+                </tr>
+                <tr>
+                  <td>SConj</td>
+                  <td>sintagma conjuntiu</td>
+                </tr>
+                <tr>
+                  <td>SCoord</td>
+                  <td>sintagma coordinat</td>
+                </tr>
+                <tr>
+                  <td>SD</td>
+                  <td>sintagma determinant</td>
+                </tr>
+                <tr>
+                  <td>SN</td>
+                  <td>sintagma nominal</td>
+                </tr>
+                <tr>
+                  <td>SP</td>
+                  <td>sintagma preposicional</td>
+                </tr>
+                <tr>
+                  <td>SQ</td>
+                  <td>sintagma quantificador</td>
+                </tr>
+                <tr>
+                  <td>SV</td>
+                  <td>sintagma verbal</td>
+                </tr>
+                <tr>
+                  <td>v.</td>
+                  <td>verb</td>
+                </tr>
+                <tr>
+                  <td>v.f.</td>
+                  <td>variant formal</td>
+                </tr>
+                <tr>
+                  <td>v. intr.</td>
+                  <td>verb intransitiu</td>
+                </tr>
+                <tr>
+                  <td>v. tr.</td>
+                  <td>verb transitiu</td>
+                </tr>
+                <tr>
+                  <td>vg.</td>
+                  <td>vegeu</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </article>
+    {{- else if .IsLetterPage -}}
+      <h1>{{ .Letter }}</h1>
+      {{ .LetterHtml }}
+    {{- else if .IsConceptPage -}}
+      <article class="entry concepte">
+        <h1 class="concepte">{{ .Concept }}</h1>
+        {{ .PhrasesHtml }}
+      </article>
+    {{- else if .IsCreditsPage -}}
+      <article>
+        <h1>Crèdits</h1>
+        <p>La publicació del DSFF va comptar amb la col·laboració de la Conselleria d'Educació i Cultura del Govern de les Illes Balears i del Departament de la Presidència de la Generalitat de Catalunya.</p>
+        <p>© dels continguts, M.Teresa Espinal, 2004, 2006, 2018, 2025<br>
+          © de l'edició impresa, Servei de Publicacions de la Universitat Autònoma de Barcelona, Publicacions de la Universitat de València, Publicacions de l'Abadia de Montserrat</p>
+        <p>Aquesta versió electrònica en línia del DSFF ha estat desenvolupada per <a href="//orga.cat">Pere Orga</a> (2018, 2025), a partir d'una obra disponible a <a href="https://publicacions.uab.cat/llibres/diccionari-sinonims-frases-fetes">publicacions.uab.cat</a>.</p>
+        <p>Aquesta web està allotjada als servidors del Servei de Publicacions de la UAB.</p>
+        <p>L'edició electrònica en línia del DSFF està sota la llicència <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca">Creative Commons Atribució-NoComercial-CompartirIgual 4.0 Internacional</a>. El <a href="https://github.com/pereorga/dsff">codi font</a> de la pàgina es distribueix amb la llicència <a href="https://www.gnu.org/licenses/agpl-3.0.ca.html">AGPL-3.0</a>.</p>
+        <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca"><img src="/by-nc-sa.svg" alt="Llicència Creative Commons Atribució-NoComercial-CompartirIgual" width="120" height="42"></a></p>
+      </article>
+    {{- else -}}
+      <h1 class="d-none">Cerca</h1>
+      <div class="search-section">
+        <label for="cerca-concepte">Cerca per concepte</label>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <select id="cerca-concepte" class="form-control custom-select"><option>Introduïu un concepte</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="search-section">
+        <form action="/" method="get">
+          <label for="frase">Cerca per frase feta</label>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <select id="mode" name="mode" aria-label="Mode de cerca" class="form-control custom-select">
+              {{- range $mode := .SearchModes -}}
+                <option{{ if eq $mode $.SearchMode }} selected{{end}}>
+                  {{- $mode -}}
+                </option>
+              {{- end -}}
+              </select>
+            </div>
+            <div class="form-group col-md-5">
+              <input type="search" class="form-control" id="frase" name="frase" autocapitalize="off" autocomplete="off"
+                     placeholder="Introduïu una frase o part d'una frase" value="{{.SearchQuery}}">
+            </div>
+            <div class="form-group col-md-1">
+              <button type="submit" class="btn btn-primary">Cerca</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      {{- if .SearchQuery -}}
+        {{- if .PhrasesHtml -}}
+          {{.PhrasesHtml}}
+          {{- if gt .TotalPages 1 -}}
+            <ul class="pagination">
+              {{- if .PreviousPage -}}
+                <li><a href="/?mode={{.SearchMode}}&frase={{.SearchQuery}}&pagina={{.PreviousPage}}" title="Pàgina anterior" rel="prev nofollow">&laquo;</a></li>
+              {{- end -}}
+              <li><span>Pàgina {{.CurrentPage}} de {{.TotalPages}}</span></li>
+              {{- if .NextPage -}}
+                <li><a href="/?mode={{.SearchMode}}&frase={{.SearchQuery}}&pagina={{.NextPage}}" title="Pàgina següent" rel="next nofollow">&raquo;</a></li>
+              {{- end -}}
+            </ul>
+          {{- end -}}
+        {{- else -}}
+          <div class="alert alert-secondary mb-4" role="alert">
+            No s'ha trobat cap resultat.
+          </div>
+        {{- end -}}
+      {{- end -}}
+      {{- if not .PhrasesHtml -}}
+        <div class="search-section">
+          <label>Llista de conceptes</label>
+          <div class="letters">
+            <a href="/lletra/A">A</a> <a href="/lletra/B">B</a> <a href="/lletra/C">C</a> <a href="/lletra/D">D</a> <a href="/lletra/E">E</a> <a href="/lletra/F">F</a> <a href="/lletra/G">G</a> <a href="/lletra/H">H</a> <a href="/lletra/I">I</a> <a href="/lletra/J">J</a> <a href="/lletra/L">L</a> <a href="/lletra/M">M</a> <a href="/lletra/N">N</a> <a href="/lletra/O">O</a> <a href="/lletra/P">P</a> <a href="/lletra/Q">Q</a> <a href="/lletra/R">R</a> <a href="/lletra/S">S</a> <a href="/lletra/T">T</a> <a href="/lletra/U">U</a> <a href="/lletra/V">V</a> <a href="/lletra/X">X</a> <a href="/lletra/Z">Z</a>
+          </div>
+        </div>
+      {{- end -}}
+    {{- end -}}
+  </div>
+  <footer class="mt-4">
+    <div class="container text-center">
+      <p><a href="//www.uab.cat"><img alt="Logo UAB" title="Universitat Autònoma de Barcelona" src="/uab.svg" width="150" height="56"></a></p>
+      <p class="mt-4"><small>&copy; 2025 M.Teresa Espinal</small></p>
+    </div>
+  </footer>
+  {{- if .IsHomepage -}}
+    <script defer src="/search.min.js"></script>
+  {{- else -}}
+    <script>(()=>{const t=document.querySelector(".navbar-toggler"),e=document.querySelector("#navbar-collapse");t.addEventListener("click",()=>{e.classList.toggle("show")})})();</script>
+  {{- end -}}
+</body>
+</html>

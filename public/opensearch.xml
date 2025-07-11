@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName>DSFF</ShortName>
+  <LongName>Diccionari de sinònims de frases fetes</LongName>
+  <Description>El Diccionari de Sinònims de Frases Fetes és un diccionari conceptual d'expressions lexicalitzades, que relaciona conceptes amb expressions lexicalitzades de naturalesa gramatical diversa, allò que en la gramàtica tradicional s'han anomenat genèricament locucions i frases fetes.</Description>
+  <Tags>català frases fetes locucions</Tags>
+  <Url type="text/html" method="get" template="https://dsff.uab.cat/?frase={searchTerms}" />
+  <Image width="32" height="32" type="image/vnd.microsoft.icon">https://dsff.uab.cat/favicon.ico</Image>
+  <Query role="example" searchTerms="fet una fera" />
+  <Attribution>M.Teresa Espinal</Attribution>
+  <Developer>Pere Orga Esteve</Developer>
+  <Language>ca-es</Language>
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+  <moz:SearchForm>https://dsff.uab.cat/</moz:SearchForm>
+</OpenSearchDescription>
