@@ -1,0 +1,30 @@
+{
+  "name": "dsff",
+  "description": "Diccionari de Sinònims de Frases Fetes (DSFF)",
+  "author": "Pere Orga Esteve <pere@orga.cat>",
+  "homepage": "https://dsff.uab.cat/",
+  "license": "AGPL-3.0-or-later",
+  "repository": "https://github.com/pereorga/dsff.git",
+  "bugs": "https://github.com/pereorga/dsff/issues",
+  "scripts": {
+    "build:assets": "npm run build:css && npm run build:js",
+    "build:css": "cat node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/tom-select/dist/css/tom-select.bootstrap4.min.css assets/css/main.css | npx lightningcss-cli --minify > public/css/main.min.css",
+    "build:js": "cat node_modules/tom-select/dist/js/tom-select.base.min.js > public/js/search.min.js && npx terser assets/js/conceptes.js assets/js/search.js assets/js/main.js --compress --mangle >> public/js/search.min.js",
+    "build": "(cd go/ && go build -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",
+    "fix:go": "(cd go/ && go fmt)",
+    "fix:prettier": "prettier --write .",
+    "fix": "npm run fix:prettier && npm run fix:go",
+    "lint:go": "(cd go/ && go vet && gofmt -d .)",
+    "lint:prettier": "prettier --check .",
+    "lint": "npm run lint:prettier && npm run lint:go"
+  },
+  "devDependencies": {
+    "lightningcss-cli": "1.30.1",
+    "prettier": "3.6.2",
+    "terser": "5.43.1"
+  },
+  "dependencies": {
+    "bootstrap": "4.6.2",
+    "tom-select": "2.4.3"
+  }
+}

@@ -1,0 +1,207 @@
+.container {
+  max-width: 960px;
+}
+
+.navbar-dark {
+  background: #760c28;
+}
+
+.navbar-dark .navbar-nav a.nav-link {
+  color: #fff;
+}
+
+.navbar-dark .navbar-nav a.nav-link:focus,
+.navbar-dark .navbar-nav a.nav-link:hover {
+  color: #fcd18b;
+}
+
+abbr[title] {
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+article.concepte,
+article.frase {
+  margin-bottom: 2.5rem;
+}
+
+hr {
+  margin-bottom: 2.5rem;
+}
+
+.concepte:has(.accepcio) .frase {
+  margin-left: 1rem;
+}
+
+.accepcio {
+  margin-bottom: 0.5rem;
+}
+
+.frase p {
+  padding-left: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.frase h2 + p,
+.frase h2 + div + p,
+.concepte .frase > div + p,
+.concepte .frase > p:first-child {
+  text-indent: -1rem;
+}
+
+b,
+strong,
+a {
+  font-weight: 600;
+}
+
+a,
+a:hover,
+a:focus {
+  color: #760c28;
+}
+
+a.navbar-brand {
+  margin-right: 0;
+  font-size: 13px;
+  font-weight: inherit;
+}
+
+.letters a {
+  display: inline-block;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+}
+
+.entry p a {
+  font-weight: inherit;
+  color: inherit;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h1.concepte,
+h2.concepte,
+h2.concepte a,
+a.concepte {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #760c28;
+}
+
+h1.concepte {
+  font-size: 1.2rem;
+}
+
+h2.concepte + div {
+  margin-top: -5px;
+}
+
+.simbol {
+  display: inline-block;
+  width: 1.125rem;
+}
+
+.simbol-punt {
+  padding-left: 3px;
+}
+
+.btn-primary {
+  color: #fff !important;
+  background: #760c28 !important;
+  border-color: #760c28 !important;
+}
+
+.search-section {
+  margin-bottom: 1rem;
+}
+
+article.abreviatures h2 {
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+article.abreviatures h1 + h2 {
+  margin-top: 0;
+}
+
+table.simbols tr td:first-child,
+table.fonts tr td:first-child {
+  width: 4rem;
+  vertical-align: top;
+}
+
+table.categories tr td:first-child,
+table.dialectes tr td:first-child {
+  width: 8rem;
+}
+
+/* Make matched letters bold */
+.ts-dropdown [data-selectable] .highlight {
+  font-weight: 700;
+  background: unset;
+}
+
+/* Align better with custom-select styles */
+.ts-wrapper.single .ts-control:not(.rtl)::after {
+  right: 0.75rem;
+}
+
+/* Reduce styles change when loading */
+#cerca-concepte {
+  background: #fff;
+}
+
+/* Match Bootstrap colors */
+.ts-control,
+.ts-control input,
+.ts-dropdown {
+  color: #495057;
+}
+
+/* Align better with input standard behaviour */
+.ts-wrapper.single .ts-control,
+.ts-wrapper.single .ts-control input {
+  cursor: unset;
+}
+
+/* Set correct Bootstrap colors, especially fix Firefox */
+#cerca-concepte,
+.ts-wrapper.single .ts-control input::placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+
+@media (min-width: 370px) {
+  a.navbar-brand {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 490px) {
+  a.navbar-brand {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 991px) {
+  a.nav-link:first-child {
+    padding-top: 1rem;
+  }
+}
+
+.pagination:has(a[rel*="prev"]) {
+  margin-left: -0.75rem;
+}
+
+.pagination li a {
+  padding: 0.5rem 0.75rem;
+}
+
+.pagination li span {
+  padding: 0.5rem 0;
+}
