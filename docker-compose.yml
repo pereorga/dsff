@@ -2,5 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8090:8090"
+      - "${PORT:-80}:${PORT:-80}"
+    environment:
+      - PORT=${PORT:-80}
     container_name: dsff-go

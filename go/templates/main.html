@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#760c28">
   <link rel="stylesheet" href="/main.min.css">
-  {{- if .CanonicalUrl -}}
-    <link rel="canonical" href="{{ .CanonicalUrl }}">
+  {{- if .CanonicalURL -}}
+    <link rel="canonical" href="{{ .CanonicalURL }}">
   {{- end -}}
   <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="DSFF">
   <script async data-domain="dsff.uab.cat" src="https://statistics.precarietat.net/js/script.js"></script>
@@ -339,11 +339,11 @@
       </article>
     {{- else if .IsLetterPage -}}
       <h1>{{ .Letter }}</h1>
-      {{ .LetterHtml }}
+      {{ .LetterHTML }}
     {{- else if .IsConceptPage -}}
       <article class="entry concepte">
         <h1 class="concepte">{{ .Concept }}</h1>
-        {{ .PhrasesHtml }}
+        {{ .PhrasesHTML }}
       </article>
     {{- else if .IsCreditsPage -}}
       <article>
@@ -390,8 +390,8 @@
         </form>
       </div>
       {{- if .SearchQuery -}}
-        {{- if .PhrasesHtml -}}
-          {{.PhrasesHtml}}
+        {{- if .PhrasesHTML -}}
+          {{.PhrasesHTML}}
           {{- if gt .TotalPages 1 -}}
             <ul class="pagination">
               {{- if .PreviousPage -}}
@@ -409,7 +409,7 @@
           </div>
         {{- end -}}
       {{- end -}}
-      {{- if not .PhrasesHtml -}}
+      {{- if not .PhrasesHTML -}}
         <div class="search-section">
           <label>Llista de conceptes</label>
           <div class="letters">

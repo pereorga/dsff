@@ -16,6 +16,15 @@ import (
 	"golang.org/x/text/language"
 )
 
+// getServerAddress returns the server address from the PORT env variable.
+func getServerAddress() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "80"
+	}
+	return ":" + port
+}
+
 // getAllAbbreviations returns a map of all abbreviations and their corresponding full text.
 // This map is used to expand abbreviations found in the dictionary data.
 // Note: Some abbreviations might be substrings of longer words, which could lead to
@@ -94,6 +103,10 @@ func getObservationSources() map[string]string {
 // getCategory returns the HTML representation of a grammatical category.
 // It takes a category key (e.g., "sv") and returns an HTML string with an
 // <abbr> tag that provides the full category name on hover.
+//
+// Postconditions:
+//   - Returns formatted HTML <abbr> tag for recognized categories
+//   - Returns original categoryKey for unrecognized categories
 func getCategory(categoryKey string) string {
 	// Category mappings
 	categories := map[string]string{
@@ -135,8 +148,6 @@ func getCategory(categoryKey string) string {
 // It populates the global variables AllEntries, PhrasesMap, and ConceptsByFirstLetter,
 // which are used throughout the application. This function is called once at startup.
 func loadDataFromFile(filePath string) error {
-	const letterCount = 23
-
 	file, err := os.Open(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to open data file %s: %w", filePath, err)
@@ -155,7 +166,7 @@ func loadDataFromFile(filePath string) error {
 	}
 
 	PhrasesMap = make(map[string]bool, len(AllEntries))
-	ConceptsByFirstLetter = make(map[string][]string, letterCount)
+	ConceptsByFirstLetter = make(map[string][]string)
 
 	// Populate data structures for efficient lookups.
 	for _, entry := range AllEntries {
@@ -180,53 +191,56 @@ func loadDataFromFile(filePath string) error {
 	return nil
 }
 
-// getCanonicalUrl returns the canonical URL for a given request.
+// getCanonicalURL returns the canonical URL for a given request.
 // This is used to generate <link rel="canonical"> tags, which helps prevent
 // search engines from indexing duplicate content from development or staging environments.
-func getCanonicalUrl(r *http.Request) string {
-	return BaseCanonicalUrl + r.URL.RequestURI()
+func getCanonicalURL(r *http.Request) string {
+	return BaseCanonicalURL + r.URL.RequestURI()
 }
 
 // createAbbrReplacer creates a strings.Replacer to replace abbreviations with <abbr> tags.
-// It takes a map of abbreviations and a boolean to indicate whether the abbreviations
-// are expected to be enclosed in parentheses.
-func createAbbrReplacer(abbrMap map[string]string, inParentheses bool) *strings.Replacer {
+func createAbbrReplacer(abbrMap map[string]string) *strings.Replacer {
 	var replacements []string
 	for key, value := range abbrMap {
-		pattern := key
-		replacement := fmt.Sprintf("<abbr title=\"%s\">%s</abbr>", value, key)
-		if inParentheses {
-			pattern = "(" + key + ")"
-			replacement = "(" + replacement + ")"
-		}
+		replacements = append(replacements, key, fmt.Sprintf("<abbr title=\"%s\">%s</abbr>", value, key))
+	}
+	return strings.NewReplacer(replacements...)
+}
+
+// createAbbrReplacerInParentheses creates a strings.Replacer for abbreviations enclosed in parentheses.
+func createAbbrReplacerInParentheses(abbrMap map[string]string) *strings.Replacer {
+	var replacements []string
+	for key, value := range abbrMap {
+		pattern := "(" + key + ")"
+		replacement := fmt.Sprintf("(<abbr title=\"%s\">%s</abbr>)", value, key)
 		replacements = append(replacements, pattern, replacement)
 	}
 	return strings.NewReplacer(replacements...)
 }
 
 // replaceAbbreviationsParentheses replaces abbreviations that are enclosed in parentheses.
-// For example, it transforms "(v.f.)" into "(<abbr title="...">v.f.</abbr>)".
+// For example, it transforms "(v.f.)" into "(<abbr title=\"...\">v.f.</abbr>)".
 func replaceAbbreviationsParentheses(text string) string {
-	return createAbbrReplacer(getAllAbbreviations(), true).Replace(text)
+	return createAbbrReplacerInParentheses(getAllAbbreviations()).Replace(text)
 }
 
 // replaceAbbreviations replaces abbreviations that are not necessarily in parentheses.
 // This function is used when more selective replacement is not possible, but it carries
 // a higher risk of making unintended replacements.
 func replaceAbbreviations(text string) string {
-	return createAbbrReplacer(getAllAbbreviations(), false).Replace(text)
+	return createAbbrReplacer(getAllAbbreviations()).Replace(text)
 }
 
 // replaceSourceAbbreviationsParentheses replaces source abbreviations that are enclosed in parentheses.
-// For example, it transforms "(DIEC1)" into "(<abbr title="...">DIEC1</abbr>)".
+// For example, it transforms "(DIEC1)" into "(<abbr title=\"...\">DIEC1</abbr>)".
 func replaceSourceAbbreviationsParentheses(text string) string {
-	return createAbbrReplacer(getAllSources(), true).Replace(text)
+	return createAbbrReplacerInParentheses(getAllSources()).Replace(text)
 }
 
 // replaceObservationsSourceAbbreviations replaces source abbreviations for the "Observacions" field.
 // This is similar to replaceAbbreviations but uses a specific set of sources.
 func replaceObservationsSourceAbbreviations(text string) string {
-	return createAbbrReplacer(getObservationSources(), false).Replace(text)
+	return createAbbrReplacer(getObservationSources()).Replace(text)
 }
 
 // getSources formats a comma-separated string of source abbreviations into an HTML string.
@@ -264,13 +278,14 @@ func getSources(sources string) string {
 	return fmt.Sprintf("(%s)", joinedSources)
 }
 
-// getPhrase formats a single phrase for display.
-// It renders the phrase in bold and prepends a marker ("■") if it is a new incorporation.
-func getPhrase(phrase string, isNewIncorporation bool) string {
-	if isNewIncorporation {
-		return "■ " + renderBoldPhrases(phrase, true)
-	}
+// getPhrase formats a single phrase for display, rendering it in bold.
+func getPhrase(phrase string) string {
 	return renderBoldPhrases(phrase, true)
+}
+
+// getNewIncorporationPhrase formats a new phrase, adding a marker and rendering it in bold.
+func getNewIncorporationPhrase(phrase string) string {
+	return "■ " + getPhrase(phrase)
 }
 
 // phraseExists checks if a given phrase exists in the dictionary.
@@ -281,6 +296,12 @@ func phraseExists(phrase string) bool {
 
 // smartSplit splits a string by a separator, but ignores separators that are inside parentheses.
 // This is useful for splitting lists of phrases where some phrases may contain commas.
+//
+// Postconditions:
+//   - Returns empty slice if input is empty
+//   - Returns slice with at least one element for non-empty input
+//   - Parentheses nesting is correctly handled
+//   - Original separators inside parentheses are restored
 func smartSplit(input, separator string) []string {
 	const placeholderUnusedChar = "|"
 
@@ -310,6 +331,13 @@ func smartSplit(input, separator string) []string {
 	return restoredParts
 }
 
+// Phrases that should not be split or linked
+var PhrasesWhitelist = []string{
+	"Jesús, Maria i Josep (v.f.)",
+	"en Pere, en Pau i en Berenguera (v.f.)",
+	"córrer la Seca, la Meca i la vall d'Andorra (v.f.)",
+}
+
 // renderBoldPhrases renders one or more phrases in bold.
 // If createLink is true, it also wraps each phrase in an anchor tag that links to a search for that phrase.
 // It handles single phrases, as well as lists of phrases separated by commas or semicolons.
@@ -324,14 +352,7 @@ func renderBoldPhrases(input string, createLink bool) string {
 	separator := ","
 	var isSinglePhrase bool
 
-	// Phrases that should not be split or linked
-	RenderBoldPhrasesWhitelist := []string{
-		"Jesús, Maria i Josep (v.f.)",
-		"en Pere, en Pau i en Berenguera (v.f.)",
-		"córrer la Seca, la Meca i la vall d'Andorra (v.f.)",
-	}
-
-	if phraseExists(input) || slices.Contains(RenderBoldPhrasesWhitelist, input) {
+	if phraseExists(input) || slices.Contains(PhrasesWhitelist, input) {
 		// If the provided input exists as a phrase, don't try to split it.
 		// Use a placeholder that won't be in the input, so the sentence is not
 		// split but still gets processed correctly.
@@ -390,7 +411,7 @@ func renderConceptsByLetter(concepts []string) string {
 	for _, concept := range concepts {
 		fmt.Fprintf(&html, `<li class="mb-3"><a class="concepte" href="/concepte/%s">%s</a></li>`,
 			getConceptSlug(concept),
-			getConceptTitleHtml(concept),
+			getConceptTitleHTML(concept),
 		)
 	}
 	html.WriteString(`</ul>`)
@@ -427,79 +448,100 @@ func isNumberedItem(word string) bool {
 	return err == nil
 }
 
-// renderPhrases renders a list of dictionary entries into an HTML string.
-// If isConceptPage is true, it groups phrases by their "accepció" and adds separators.
-// Otherwise, it includes the concept title for each phrase.
-func renderPhrases(entries []Entry, isConceptPage bool) string {
+// renderEntriesForConceptPage renders entries for a concept page, grouping them by "accepció".
+func renderEntriesForConceptPage(entries []Entry) string {
 	var htmlOutput strings.Builder
 	var lastAccepcio string
 
 	for _, entry := range entries {
-		if isConceptPage {
-			if entry.AccepcioConcepte != "" && entry.AccepcioConcepte != lastAccepcio {
-				if lastAccepcio != "" {
-					htmlOutput.WriteString(`<hr>`)
-				}
-				htmlOutput.WriteString(getAccepcio(entry.AccepcioConcepte))
-				lastAccepcio = entry.AccepcioConcepte
+		if entry.AccepcioConcepte != "" && entry.AccepcioConcepte != lastAccepcio {
+			if lastAccepcio != "" {
+				htmlOutput.WriteString(`<hr>`)
 			}
-			htmlOutput.WriteString(`<article class="entry frase">`)
-		} else {
-			htmlOutput.WriteString(`<article class="entry frase">`)
-			fmt.Fprintf(&htmlOutput, `<h2 class="concepte"><a href="/concepte/%s">%s</a></h2>`,
-				getConceptSlug(entry.Concepte),
-				getConceptTitleHtml(entry.Concepte),
-			)
+			htmlOutput.WriteString(getAccepcio(entry.AccepcioConcepte))
+			lastAccepcio = entry.AccepcioConcepte
 		}
-
-		if entry.AntonimConcepte {
-			htmlOutput.WriteString(`<div><abbr title="valor antònim del concepte">ANT</abbr></div>`)
-		}
-
-		fmt.Fprintf(&htmlOutput, `<p>%s %s, %s %s</p>`,
-			getPhrase(entry.Title, entry.NovaIncorporacio),
-			getCategory(entry.Categoria),
-			entry.Definicio,
-			getSources(entry.FontDefinicio),
-		)
-
-		if entry.Exemples != "" {
-			fmt.Fprintf(&htmlOutput, "<p>%s %s</p>",
-				replaceAbbreviationsParentheses(entry.Exemples),
-				getSources(entry.FontExemples),
-			)
-		}
-		if entry.Sinonims != "" {
-			fmt.Fprintf(&htmlOutput, `<p><span class="simbol">→</span>%s</p>`,
-				replaceAbbreviationsParentheses(renderBoldPhrases(entry.Sinonims, true)),
-			)
-		}
-		if entry.AltresRelacions != "" {
-			fmt.Fprintf(&htmlOutput, `<p><span class="simbol">▷</span>%s</p>`,
-				replaceAbbreviationsParentheses(renderBoldPhrases(entry.AltresRelacions, true)),
-			)
-		}
-		if entry.VariantsDialectals != "" {
-			fmt.Fprintf(&htmlOutput, `<p><span class="simbol simbol-punt">•</span>%s</p>`,
-				replaceAbbreviations(renderBoldPhrases(entry.VariantsDialectals, false)),
-			)
-		}
-		if entry.MarcatgeDialectal != "" {
-			fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceSourceAbbreviationsParentheses(replaceAbbreviations(entry.MarcatgeDialectal)))
-		}
-		if entry.Observacions != "" {
-			fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceObservationsSourceAbbreviations(entry.Observacions))
-		}
-
+		htmlOutput.WriteString(`<article class="entry frase">`)
+		htmlOutput.WriteString(renderSingleEntry(entry))
 		htmlOutput.WriteString(`</article>`)
 	}
 
 	return htmlOutput.String()
 }
 
-// getConceptTitleHtml formats a concept title for HTML display by converting numbers to superscripts.
+// renderEntriesForSearch renders entries for a search results page, including the concept title for each.
+func renderEntriesForSearch(entries []Entry) string {
+	var htmlOutput strings.Builder
+
+	for _, entry := range entries {
+		htmlOutput.WriteString(`<article class="entry frase">`)
+		fmt.Fprintf(&htmlOutput, `<h2 class="concepte"><a href="/concepte/%s">%s</a></h2>`,
+			getConceptSlug(entry.Concepte),
+			getConceptTitleHTML(entry.Concepte),
+		)
+		htmlOutput.WriteString(renderSingleEntry(entry))
+		htmlOutput.WriteString(`</article>`)
+	}
+
+	return htmlOutput.String()
+}
+
+// renderSingleEntry renders the HTML for a single dictionary entry.
+func renderSingleEntry(entry Entry) string {
+	var htmlOutput strings.Builder
+
+	if entry.AntonimConcepte {
+		htmlOutput.WriteString(`<div><abbr title="valor antònim del concepte">ANT</abbr></div>`)
+	}
+
+	var phraseHTML string
+	if entry.NovaIncorporacio {
+		phraseHTML = getNewIncorporationPhrase(entry.Title)
+	} else {
+		phraseHTML = getPhrase(entry.Title)
+	}
+
+	fmt.Fprintf(&htmlOutput, `<p>%s %s, %s %s</p>`,
+		phraseHTML,
+		getCategory(entry.Categoria),
+		entry.Definicio,
+		getSources(entry.FontDefinicio),
+	)
+
+	if entry.Exemples != "" {
+		fmt.Fprintf(&htmlOutput, "<p>%s %s</p>",
+			replaceAbbreviationsParentheses(entry.Exemples),
+			getSources(entry.FontExemples),
+		)
+	}
+	if entry.Sinonims != "" {
+		fmt.Fprintf(&htmlOutput, `<p><span class="simbol">→</span>%s</p>`,
+			replaceAbbreviationsParentheses(renderBoldPhrases(entry.Sinonims, true)),
+		)
+	}
+	if entry.AltresRelacions != "" {
+		fmt.Fprintf(&htmlOutput, `<p><span class="simbol">▷</span>%s</p>`,
+			replaceAbbreviationsParentheses(renderBoldPhrases(entry.AltresRelacions, true)),
+		)
+	}
+	if entry.VariantsDialectals != "" {
+		fmt.Fprintf(&htmlOutput, `<p><span class="simbol simbol-punt">•</span>%s</p>`,
+			replaceAbbreviations(renderBoldPhrases(entry.VariantsDialectals, false)),
+		)
+	}
+	if entry.MarcatgeDialectal != "" {
+		fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceSourceAbbreviationsParentheses(replaceAbbreviations(entry.MarcatgeDialectal)))
+	}
+	if entry.Observacions != "" {
+		fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceObservationsSourceAbbreviations(entry.Observacions))
+	}
+
+	return htmlOutput.String()
+}
+
+// getConceptTitleHTML formats a concept title for HTML display by converting numbers to superscripts.
 // For example, "Concepte1" becomes "Concepte<sup>1</sup>".
-func getConceptTitleHtml(concept string) string {
+func getConceptTitleHTML(concept string) string {
 	return regexp.MustCompile(`(\d)`).ReplaceAllString(concept, "<sup>$1</sup>")
 }
 
@@ -578,7 +620,18 @@ func normalizeForSearch(input string) string {
 
 // getEntries retrieves a paginated list of dictionary entries that match a search query.
 // It supports different search modes (contains, starts with, ends with, exact match)
-// and sorts the results alphabetically, with exact matches appearing first.
+// and sorts the results alphabetically.
+//
+// Preconditions:
+//   - normalizedQuery must be non-empty
+//   - page must be >= 1
+//   - pageSize must be >= 1
+//
+// Postconditions:
+//   - Returns entries slice with length <= pageSize
+//   - Returns total count of matching entries
+//   - Results are sorted according to search mode and Catalan collation rules
+//   - For default search mode, exact matches appear first
 func getEntries(normalizedQuery, searchMode string, page, pageSize int) ([]Entry, int) {
 	regex := regexp.MustCompile(fmt.Sprintf(`(^|[^\p{L}\p{M}])%s([^\p{L}\p{M}]|$)`, regexp.QuoteMeta(normalizedQuery)))
 
@@ -608,7 +661,6 @@ func getEntries(normalizedQuery, searchMode string, page, pageSize int) ([]Entry
 	slices.SortFunc(results, func(a, b Entry) int {
 		// For default search mode, show exact matches at the top
 		if searchMode == "" || searchMode == SearchModeConte {
-
 			// Check if either entry is an exact match
 			aExact := a.TitleNormalizedWpc == normalizedQuery || a.TitleNormalizedWp == normalizedQuery
 			bExact := b.TitleNormalizedWpc == normalizedQuery || b.TitleNormalizedWp == normalizedQuery
@@ -652,6 +704,11 @@ func getEntries(normalizedQuery, searchMode string, page, pageSize int) ([]Entry
 
 // getEntriesByConceptSlug retrieves all dictionary entries for a given concept slug.
 // The slug is converted back to the original concept format for matching.
+//
+// Postconditions:
+//   - Returns all entries matching the concept (case-insensitive)
+//   - Returns empty slice if no matches found
+//   - Slug format: underscores converted to spaces for matching
 func getEntriesByConceptSlug(conceptSlug string) []Entry {
 	var records []Entry
 

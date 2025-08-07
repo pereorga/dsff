@@ -19,7 +19,7 @@ func basicPageHandler(title string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		pageData := PageData{
 			Title:        title,
-			CanonicalUrl: getCanonicalUrl(r),
+			CanonicalURL: getCanonicalURL(r),
 		}
 		switch title {
 		case "Crèdits":
@@ -30,8 +30,14 @@ func basicPageHandler(title string) http.HandlerFunc {
 			pageData.IsAbreviaturesPage = true
 		case "Presentació":
 			pageData.IsPresentacioPage = true
+		default:
+			// No-op
 		}
-		MainTemplate.Execute(w, pageData)
+
+		err := MainTemplate.Execute(w, pageData)
+		if err != nil {
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -39,6 +45,11 @@ func basicPageHandler(title string) http.HandlerFunc {
 // It processes the search query, search mode, and pagination from the URL parameters,
 // retrieves the corresponding dictionary entries, and renders the results using the main template.
 // If no query is provided, it displays the homepage.
+//
+// Additionally:
+//   - Serves a 404 page for non-root paths
+//   - Renders search results with proper pagination and sorting
+//   - Page numbers are normalized (invalid values default to 1)
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		serveNotFound(w)
@@ -72,13 +83,13 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		SearchModes:  []string{SearchModeConte, SearchModeComencaPer, SearchModeAcabaEn, SearchModeCoincident},
 		Title:        title,
 		CurrentPage:  pageNumber,
-		CanonicalUrl: getCanonicalUrl(r),
+		CanonicalURL: getCanonicalURL(r),
 	}
 
 	normalizedQuery := normalizeForSearch(query)
 	if normalizedQuery != "" {
 		entries, total := getEntries(normalizedQuery, searchMode, pageNumber, DefaultPageSize)
-		pageData.PhrasesHtml = template.HTML(renderPhrases(entries, false))
+		pageData.PhrasesHTML = template.HTML(renderEntriesForSearch(entries))
 		pageData.TotalPages = (total + DefaultPageSize - 1) / DefaultPageSize
 		if pageNumber > 1 {
 			pageData.PreviousPage = pageNumber - 1
@@ -88,12 +99,19 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	MainTemplate.Execute(w, pageData)
+	err = MainTemplate.Execute(w, pageData)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 // letterHandler handles requests for browsing dictionary entries by the first letter of a concept.
-// It expects a URL path in the format /lletra/{letter}, where {letter} is a single uppercase letter.
+// It expects a URL path in the format /lletra/{letter}, where {letter} is a single uppercase letter (A-Z).
 // If the letter is valid and has associated concepts, it renders a page with a list of those concepts.
+//
+// Additionally:
+//   - Serves a 404 page for invalid letters or letters with no concepts
+//   - Sorts concepts using the Catalan locale
 func letterHandler(w http.ResponseWriter, r *http.Request) {
 	letter := r.PathValue("letter")
 
@@ -111,17 +129,24 @@ func letterHandler(w http.ResponseWriter, r *http.Request) {
 		Title:        fmt.Sprintf("Lletra %s", letter),
 		IsLetterPage: true,
 		Letter:       letter,
-		LetterHtml:   template.HTML(renderConceptsByLetter(ConceptsByFirstLetter[letter])),
-		CanonicalUrl: getCanonicalUrl(r),
+		LetterHTML:   template.HTML(renderConceptsByLetter(ConceptsByFirstLetter[letter])),
+		CanonicalURL: getCanonicalURL(r),
 	}
 
-	MainTemplate.Execute(w, pageData)
+	err := MainTemplate.Execute(w, pageData)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 // conceptHandler handles requests for displaying all phrases related to a specific concept.
 // It expects a URL path in the format /concepte/{conceptSlug}, where {conceptSlug} is the
-// URL-friendly version of the concept name. It retrieves all entries for that concept,
-// sorts them, and renders them on a dedicated concept page.
+// URL-friendly version of the concept name. It retrieves all entries for that concept and
+// renders them on a dedicated concept page.
+//
+// Additionally:
+//   - Serves a 404 page if no entries found for the concept
+//   - Sorts entries by accepció, antònim, and phrase
 func conceptHandler(w http.ResponseWriter, r *http.Request) {
 	entries := getEntriesByConceptSlug(r.PathValue("concept"))
 	if len(entries) == 0 {
@@ -154,16 +179,23 @@ func conceptHandler(w http.ResponseWriter, r *http.Request) {
 	pageData := PageData{
 		Title:         getConceptTitle(entries[0].Concepte),
 		IsConceptPage: true,
-		Concept:       template.HTML(getConceptTitleHtml(entries[0].Concepte)),
-		PhrasesHtml:   template.HTML(renderPhrases(entries, true)),
-		CanonicalUrl:  getCanonicalUrl(r),
+		Concept:       template.HTML(getConceptTitleHTML(entries[0].Concepte)),
+		PhrasesHTML:   template.HTML(renderEntriesForConceptPage(entries)),
+		CanonicalURL:  getCanonicalURL(r),
 	}
 
-	MainTemplate.Execute(w, pageData)
+	err := MainTemplate.Execute(w, pageData)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 // serveNotFound renders a standard 404 Not Found error page.
 func serveNotFound(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusNotFound)
-	NotFoundTemplate.Execute(w, nil)
+
+	err := NotFoundTemplate.Execute(w, nil)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }

@@ -26,6 +26,8 @@ COPY data.json.gz .
 # include static assets
 COPY public/ public/
 
-EXPOSE 8090
+ARG PORT=80
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 CMD ["./dsff"]

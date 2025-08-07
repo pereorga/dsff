@@ -29,7 +29,7 @@ type Entry struct {
 // Used in the main template.
 type PageData struct {
 	Title        string
-	CanonicalUrl string
+	CanonicalURL string
 
 	// Flags to indicate the page being rendered
 	IsHomepage         bool
@@ -54,8 +54,8 @@ type PageData struct {
 
 	// Used in letter pages
 	Letter     string        // The letter ({A-Z}).
-	LetterHtml template.HTML // Body of the letter page.
+	LetterHTML template.HTML // Body of the letter page.
 
 	// Used in search and concept pages
-	PhrasesHtml template.HTML // List of rendered, clickable phrases.
+	PhrasesHTML template.HTML // List of rendered, clickable phrases.
 }

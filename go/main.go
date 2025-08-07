@@ -13,11 +13,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 )
 
 const (
-	ServerAddress        = ":8090"
-	BaseCanonicalUrl     = "https://dsff.uab.cat"
+	BaseCanonicalURL     = "https://dsff.uab.cat"
 	DefaultPageSize      = 10
 	SearchModeConte      = "Conté"
 	SearchModeComencaPer = "Comença per"
@@ -95,6 +95,14 @@ func main() {
 	})
 
 	// Start the HTTP server.
-	log.Println("Server started at", ServerAddress)
-	log.Fatal(http.ListenAndServe(ServerAddress, mux))
+	serverAddress := getServerAddress()
+	server := &http.Server{
+		Addr:         serverAddress,
+		Handler:      mux,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+	log.Println("Server started at", serverAddress)
+	log.Fatal(server.ListenAndServe())
 }
