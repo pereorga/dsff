@@ -426,8 +426,16 @@
     </div>
   </footer>
   {{- if .IsHomepage -}}
+    {{/*
+      search.min.js includes:
+      - Tom Select (node_modules/../tom-select.base.js)
+      - Custom code for the concept selector and search (js/search.js)
+      - Concept list (js/conceptes.js)
+      - Menu toggler (js/main.js)
+    */}}
     <script defer src="/search.min.js"></script>
   {{- else -}}
+    {{/* Inline a minified version of js/main.js to avoid unnecessary HTTP requests */}}
     <script>(()=>{const t=document.querySelector(".navbar-toggler"),e=document.querySelector("#navbar-collapse");t.addEventListener("click",()=>{e.classList.toggle("show")})})();</script>
   {{- end -}}
 </body>
