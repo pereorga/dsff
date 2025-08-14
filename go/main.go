@@ -77,16 +77,20 @@ func main() {
 	// Register handlers for serving static files.
 	// These are handled individually to avoid showing the annoying default
 	// directory file listing.
+	//
 	// TODO:
 	//  - Set long cache headers for static assets (JS, CSS, images). But then:
 	//  - Append cache-busting query strings or version hashes to CSS/JS URLs.
 	// Also consider:
 	//  - Enable compression (gzip and brotli) — this may be better handled at a
 	//    higher layer, such as TLS termination or the reverse proxy. Mainly
-	//    useful for the CSS and JS files, which are the only responses likely to
-	//    exceed 100 KB.
-	mux.Handle("GET /main.min.css", http.FileServer(http.Dir("public/css/")))
-	mux.Handle("GET /search.min.js", http.FileServer(http.Dir("public/js/")))
+	//    useful for the CSS and JS files, which are the only responses that
+	//    currently exceed 20 KB.
+	//
+	// Default browser cache behaviour, although unpredictable, is acceptable. So
+	// this may stay as it is. File sizes are also relatively small.
+	mux.Handle("GET /main.min.css", http.FileServer(http.Dir("public/css/"))) // 170KB (all pages), blocking.
+	mux.Handle("GET /search.min.js", http.FileServer(http.Dir("public/js/"))) // 280KB (home page), non-blocking.
 	mux.Handle("GET /by-nc-sa.svg", http.FileServer(http.Dir("public/img/")))
 	mux.Handle("GET /uab.svg", http.FileServer(http.Dir("public/img/")))
 	mux.Handle("GET /favicon.ico", http.FileServer(http.Dir("public/")))
