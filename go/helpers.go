@@ -16,6 +16,44 @@ import (
 	"golang.org/x/text/language"
 )
 
+// precompressedFileHandler serves pre-compressed .br or .gz files when the client accepts those encodings.
+// This is more efficient than runtime compression, especially for static files.
+func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		acceptEncoding := r.Header.Get("Accept-Encoding")
+
+		// Prefer Brotli if supported
+		if strings.Contains(acceptEncoding, "br") {
+			brotliPath := originalPath + ".br"
+			_, err := os.Stat(brotliPath)
+			if err == nil {
+				w.Header().Set("Content-Encoding", "br")
+				w.Header().Set("Content-Type", contentType)
+				w.Header().Set("Vary", "Accept-Encoding")
+				http.ServeFile(w, r, brotliPath)
+				return
+			}
+		}
+
+		// Fall back to gzip if supported
+		if strings.Contains(acceptEncoding, "gzip") {
+			gzipPath := originalPath + ".gz"
+			_, err := os.Stat(gzipPath)
+			if err == nil {
+				w.Header().Set("Content-Encoding", "gzip")
+				w.Header().Set("Content-Type", contentType)
+				w.Header().Set("Vary", "Accept-Encoding")
+				http.ServeFile(w, r, gzipPath)
+				return
+			}
+		}
+
+		// Fall back to serving the original uncompressed file
+		w.Header().Set("Content-Type", contentType)
+		http.ServeFile(w, r, originalPath)
+	}
+}
+
 // getServerAddress returns the server address from the PORT env variable.
 func getServerAddress() string {
 	port := os.Getenv("PORT")
@@ -108,7 +146,6 @@ func getObservationSources() map[string]string {
 //   - Returns formatted HTML <abbr> tag for recognized categories
 //   - Returns original categoryKey for unrecognized categories
 func getCategory(categoryKey string) string {
-	// Category mappings
 	categories := map[string]string{
 		"o":      "O",
 		"sa":     "SA",
@@ -554,7 +591,6 @@ func getConceptTitle(concept string) string {
 // getConceptSlug creates a URL-friendly slug from a concept title.
 // It converts the title to lowercase and replaces spaces with underscores.
 func getConceptSlug(concept string) string {
-	// Normalize to lowercase and replace spaces with underscores for URL
 	slug := strings.ToLower(concept)
 	slug = strings.Join(strings.Fields(slug), "_")
 	return slug
@@ -595,7 +631,6 @@ func toLowercaseNoAccents(input string) string {
 // It removes parentheses, normalizes some characters (e.g., "’" to "'"),
 // converts to lowercase, and removes accents.
 func normalizeForSearch(input string) string {
-	// Apply some normalizations to match current export, removing parentheses.
 	// TODO: ideally, we would also normalize Unicode here and in the database
 	// export (NFC). But this has not been necessary so far.
 	normalizeSearchReplacer := strings.NewReplacer(

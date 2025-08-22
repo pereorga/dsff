@@ -7,7 +7,7 @@
   "repository": "https://github.com/pereorga/dsff.git",
   "bugs": "https://github.com/pereorga/dsff/issues",
   "scripts": {
-    "build:assets": "npm run build:css && npm run build:js",
+    "build:assets": "npm run build:css && npm run build:js && zopfli --i1000 public/css/main.min.css public/js/search.min.js && brotli --best public/css/main.min.css public/js/search.min.js",
     "build:css": "cat node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/tom-select/dist/css/tom-select.bootstrap4.min.css assets/css/main.css | npx lightningcss-cli --minify > public/css/main.min.css",
     "build:js": "cat node_modules/tom-select/dist/js/tom-select.base.min.js > public/js/search.min.js && npx terser assets/js/conceptes.js assets/js/search.js assets/js/main.js --compress --mangle >> public/js/search.min.js",
     "build": "(cd go/ && go build -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",

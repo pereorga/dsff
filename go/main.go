@@ -29,10 +29,8 @@ const (
 var BuildDate string
 
 var (
-	// NotFoundTemplate is the parsed template for 404 error pages.
 	NotFoundTemplate *template.Template
-	// MainTemplate is the parsed template for the main page layout.
-	MainTemplate *template.Template
+	MainTemplate     *template.Template
 )
 
 //go:embed templates/*
@@ -81,16 +79,11 @@ func main() {
 	// TODO:
 	//  - Set long cache headers for static assets (JS, CSS, images). But then:
 	//  - Append cache-busting query strings or version hashes to CSS/JS URLs.
-	// Also consider:
-	//  - Enable compression (gzip and brotli) — this may be better handled at a
-	//    higher layer, such as TLS termination or the reverse proxy. Mainly
-	//    useful for the CSS and JS files, which are the only responses that
-	//    currently exceed 20 KB.
 	//
 	// Default browser cache behaviour, although unpredictable, is acceptable. So
 	// this may stay as it is. File sizes are also relatively small.
-	mux.Handle("GET /main.min.css", http.FileServer(http.Dir("public/css/"))) // 170KB (all pages), blocking.
-	mux.Handle("GET /search.min.js", http.FileServer(http.Dir("public/js/"))) // 280KB (home page), non-blocking.
+	mux.HandleFunc("GET /main.min.css", precompressedFileHandler("public/css/main.min.css", "text/css"))
+	mux.HandleFunc("GET /search.min.js", precompressedFileHandler("public/js/search.min.js", "application/javascript"))
 	mux.Handle("GET /by-nc-sa.svg", http.FileServer(http.Dir("public/img/")))
 	mux.Handle("GET /uab.svg", http.FileServer(http.Dir("public/img/")))
 	mux.Handle("GET /favicon.ico", http.FileServer(http.Dir("public/")))
@@ -107,7 +100,6 @@ func main() {
 		http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
 	})
 
-	// Start the HTTP server.
 	serverAddress := getServerAddress()
 	server := &http.Server{
 		Addr:         serverAddress,
