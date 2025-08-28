@@ -20,6 +20,8 @@ import (
 // This is more efficient than runtime compression, especially for static files.
 func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Vary", "Accept-Encoding")
 		acceptEncoding := r.Header.Get("Accept-Encoding")
 
 		// Prefer Brotli if supported
@@ -28,8 +30,6 @@ func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc
 			_, err := os.Stat(brotliPath)
 			if err == nil {
 				w.Header().Set("Content-Encoding", "br")
-				w.Header().Set("Content-Type", contentType)
-				w.Header().Set("Vary", "Accept-Encoding")
 				http.ServeFile(w, r, brotliPath)
 				return
 			}
@@ -41,15 +41,12 @@ func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc
 			_, err := os.Stat(gzipPath)
 			if err == nil {
 				w.Header().Set("Content-Encoding", "gzip")
-				w.Header().Set("Content-Type", contentType)
-				w.Header().Set("Vary", "Accept-Encoding")
 				http.ServeFile(w, r, gzipPath)
 				return
 			}
 		}
 
 		// Fall back to serving the original uncompressed file
-		w.Header().Set("Content-Type", contentType)
 		http.ServeFile(w, r, originalPath)
 	}
 }
