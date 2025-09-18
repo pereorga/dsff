@@ -6,6 +6,9 @@
  * styles with custom styles.
  */
 
+@import url("../../node_modules/bootstrap/dist/css/bootstrap.min.css");
+@import url("../../node_modules/tom-select/dist/css/tom-select.bootstrap4.min.css");
+
 .container {
   max-width: 960px;
 }

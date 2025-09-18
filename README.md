@@ -2,10 +2,39 @@
 
 Codi font de la versió en línia del Diccionari de Sinònims de Frases Fetes ([DSFF](https://dsff.uab.cat/)).
 
-## Instal·lació (Docker)
+## Dependències
+
+### Opció 1: execució amb Docker
+
+- Docker Compose
+
+### Opció 2: compilació nativa amb Go
+
+- Go 1.24+
+
+### Desenvolupament (opcional)
+
+- Go 1.24+
+- Node.js (per a la gestió de dependències i scripts)
+
+Els assets CSS i JavaScript ja estan compilats i comprimits dins del directori `public/`. Si es volguessin recompilar, cal:
+
+- Executar `npm ci` per instal·lar les dependències
+- Tenir `brotli` i `zopfli` instal·lats per la compressió dels assets
+
+## Compilació i execució
+
+### Opció 1 (Docker)
 
 ```
 docker compose up
+```
+
+### Opció 2 (Go)
+
+```
+cd go/ && go build -o ../dsff && cd ..
+./dsff
 ```
 
 ## Copyright i llicència
