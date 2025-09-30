@@ -5,7 +5,8 @@
  * input.
  */
 
-import TomSelect from "tom-select/dist/js/tom-select.base.min.js";
+import TomSelect from "tom-select/base";
+import conceptes from "./conceptes.json" with { type: "json" };
 
 const removeCatalanAccents = function (str) {
   return str

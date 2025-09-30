@@ -8,9 +8,10 @@
   "repository": "https://github.com/pereorga/dsff.git",
   "bugs": "https://github.com/pereorga/dsff/issues",
   "scripts": {
-    "build:assets": "npm run build:css && npm run build:js && zopfli --i1000 public/css/main.min.css public/js/search.min.js && brotli --force --best public/css/main.min.css public/js/search.min.js",
+    "build:assets": "npm run build:css && npm run build:js && npm run compress:assets",
     "build:css": "esbuild assets/css/main.css --bundle --minify --outfile=public/css/main.min.css",
-    "build:js": "esbuild assets/js/search.js --bundle --minify --outfile=public/js/search.temp.js && cat assets/js/conceptes.js public/js/search.temp.js > public/js/search.min.js && rm public/js/search.temp.js",
+    "build:js": "esbuild assets/js/search.js --bundle --minify --outfile=public/js/search.min.js",
+    "compress:assets": "node scripts/compress.js public/css/main.min.css public/js/search.min.js",
     "build": "(cd go/ && go build -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",
     "fix:go": "(cd go/ && go fmt)",
     "fix:prettier": "prettier --write .",

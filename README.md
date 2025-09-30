@@ -17,11 +17,6 @@ Codi font de la versió en línia del Diccionari de Sinònims de Frases Fetes ([
 - Go 1.24+
 - Node.js (per a la gestió de dependències i scripts)
 
-Els assets CSS i JavaScript ja estan compilats i comprimits dins del directori `public/`. Si es volguessin recompilar, cal:
-
-- Executar `npm ci` per instal·lar les dependències
-- Tenir `brotli` i `zopfli` instal·lats per la compressió dels assets
-
 ## Compilació i execució
 
 ### Opció 1 (Docker)
