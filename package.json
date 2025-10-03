@@ -25,7 +25,6 @@
     "prettier": "3.6.2"
   },
   "dependencies": {
-    "bootstrap": "4.6.2",
     "tom-select": "2.4.3"
   }
 }
