@@ -12,19 +12,24 @@
 /* Include Tom Select CSS file for Bootstrap 4. */
 @import url("../../node_modules/tom-select/dist/css/tom-select.bootstrap4.css");
 
+:root {
+  --color-primary: #760c28;
+  --color-primary-light: #fcd18b;
+}
+
 .container {
   max-width: 960px;
 }
 
 .navbar-dark {
-  background: #760c28;
+  background: var(--color-primary);
 
   .navbar-nav a.nav-link {
     color: #fff;
 
     &:focus,
     &:hover {
-      color: #fcd18b;
+      color: var(--color-primary-light);
     }
   }
 }
@@ -94,7 +99,7 @@ a {
   &,
   &:hover,
   &:focus {
-    color: #760c28;
+    color: var(--color-primary);
   }
 
   &.navbar-brand {
@@ -102,11 +107,11 @@ a {
     font-size: 13px;
     font-weight: inherit;
 
-    @media (min-width: 370px) {
+    @media (width >= 370px) {
       font-size: 1rem;
     }
 
-    @media (min-width: 490px) {
+    @media (width >= 490px) {
       font-size: 1.25rem;
     }
   }
@@ -114,11 +119,11 @@ a {
   &.concepte {
     font-size: 1rem;
     font-weight: 600;
-    color: #760c28;
+    color: var(--color-primary);
   }
 
   &.nav-link:first-child {
-    @media (max-width: 991px) {
+    @media (width <= 991px) {
       padding-top: 1rem;
     }
   }
@@ -148,12 +153,12 @@ h2 {
   &.concepte {
     font-size: 1rem;
     font-weight: 600;
-    color: #760c28;
+    color: var(--color-primary);
 
     a {
       font-size: 1rem;
       font-weight: 600;
-      color: #760c28;
+      color: var(--color-primary);
     }
 
     & + div {
@@ -173,8 +178,8 @@ h2 {
 
 .btn-primary {
   color: #fff !important;
-  background: #760c28 !important;
-  border-color: #760c28 !important;
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 .search-section {

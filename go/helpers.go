@@ -401,37 +401,29 @@ func renderBoldPhrases(input string, createLink bool) string {
 	phraseList := smartSplit(input, separator)
 	for i, phrase := range phraseList {
 		isFormalVariant := strings.Contains(phrase, " (v.f.)")
-		shouldCreateLink := createLink && !isFormalVariant
+		shouldCreateLink := createLink && !isFormalVariant && phraseExists(phrase)
 
-		var html strings.Builder
+		phraseHTML := fmt.Sprintf("<strong>%s</strong>", phrase)
 		if shouldCreateLink {
-			if phraseExists(phrase) {
-				searchPath := "/?mode=Conté&frase=" + url.QueryEscape(removeParenthesesContent(phrase))
-				fmt.Fprintf(&html, "<a href=\"%s\" rel=\"nofollow\"><strong>%s</strong></a>", searchPath, phrase)
-			} else {
-				// No reference found (this should not happen)
-				fmt.Fprintf(&html, "<strong>%s</strong>", phrase)
-			}
-		} else {
-			fmt.Fprintf(&html, "<strong>%s</strong>", phrase)
+			searchPath := "/?mode=Conté&frase=" + url.QueryEscape(removeParenthesesContent(phrase))
+			phraseHTML = fmt.Sprintf("<a href=\"%s\" rel=\"nofollow\">%s</a>", searchPath, phraseHTML)
 		}
-		htmlString := html.String()
 
 		// Make parentheses non-bold. This should not leave
 		// inconsistent/unclosed tags, as long as the parentheses are correctly
 		// placed.
-		htmlString = strings.ReplaceAll(htmlString, "(", "</strong>(")
-		htmlString = strings.ReplaceAll(htmlString, ")", ")<strong>")
+		phraseHTML = strings.ReplaceAll(phraseHTML, "(", "</strong>(")
+		phraseHTML = strings.ReplaceAll(phraseHTML, ")", ")<strong>")
 
 		// Remove superfluous tags that might have been created
-		htmlString = strings.ReplaceAll(htmlString, "<strong> </strong>", " ")
-		htmlString = strings.ReplaceAll(htmlString, "<strong></strong>", "")
+		phraseHTML = strings.ReplaceAll(phraseHTML, "<strong> </strong>", " ")
+		phraseHTML = strings.ReplaceAll(phraseHTML, "<strong></strong>", "")
 
 		if isSinglePhrase {
-			return htmlString
+			return phraseHTML
 		}
 
-		phraseList[i] = htmlString
+		phraseList[i] = phraseHTML
 	}
 
 	return strings.Join(phraseList, separator+" ")
