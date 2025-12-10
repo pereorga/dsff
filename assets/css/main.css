@@ -1,9 +1,7 @@
 /**
  * Main stylesheet for DSFF.
  *
- * This CSS file contains styles shared by both the new Go implementation and
- * the legacy PHP implementation of the DSFF website. It overrides Bootstrap 4
- * styles with custom styles.
+ * This overrides some Bootstrap 4 styles with custom styles.
  */
 
 /* Bootstrap 4 CSS (bootstrap@4.6.2), processed with PurgeCSS to remove unused styles. */

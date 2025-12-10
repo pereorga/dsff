@@ -1,8 +1,5 @@
 /**
- * JavaScript code for the concept selector on the search page.
- *
- * It also handles minor UX search improvements, such as selecting the search
- * input.
+ * Concept selector and minor UX search improvements.
  */
 
 import TomSelect from "tom-select/base";
@@ -54,7 +51,7 @@ const tomSelect = new TomSelect("#cerca-concepte", {
       const matchedOptions = [];
       const otherOptions = [];
 
-      conceptes.forEach(function (option) {
+      conceptes.forEach((option) => {
         const normalizedText = removeCatalanAccents(
           option.value.toLocaleLowerCase(),
         );
@@ -80,7 +77,7 @@ const tomSelect = new TomSelect("#cerca-concepte", {
 });
 
 // Ensure the following is executed with browser back/forward navigation.
-window.addEventListener("pageshow", function () {
+window.addEventListener("pageshow", () => {
   const isMobile = /Android|iPad|iPhone/i.test(navigator.userAgent);
 
   // Ensure browser does not try to remember last form value, as it doesn't
