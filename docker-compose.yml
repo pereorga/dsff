@@ -2,7 +2,5 @@ services:
   app:
     build: .
     ports:
-      - "${PORT:-80}:${PORT:-80}"
-    environment:
-      - PORT=${PORT:-80}
+      - ${PORT:-80}:80
     container_name: dsff-go

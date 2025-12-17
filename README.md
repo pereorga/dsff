@@ -1,6 +1,6 @@
 # DSFF
 
-*Catalan version available below / Versió en català disponible a continuació*
+_Catalan version available below / Versió en català disponible a continuació_
 
 Source code for the online version of the Diccionari de Sinònims de Frases Fetes (Dictionary of Synonyms of Idiomatic Expressions) ([DSFF](https://dsff.uab.cat/)).
 
