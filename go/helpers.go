@@ -229,7 +229,14 @@ func loadDataFromFile(filePath string) error {
 // This is used to generate <link rel="canonical"> tags, which helps prevent
 // search engines from indexing duplicate content from development or staging environments.
 func getCanonicalURL(r *http.Request) string {
-	return BaseCanonicalURL + r.URL.RequestURI()
+	canonical := BaseCanonicalURL + r.URL.EscapedPath()
+
+	// For search results (on the root path), include the query parameters.
+	if (r.URL.Path == "/" || r.URL.Path == "") && r.URL.Query().Get("mode") != "" || r.URL.Query().Get("frase") != "" {
+		canonical += "?" + r.URL.RawQuery
+	}
+
+	return canonical
 }
 
 // createAbbrReplacer creates a strings.Replacer to replace abbreviations with <abbr> tags.
