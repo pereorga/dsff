@@ -231,9 +231,21 @@ func loadDataFromFile(filePath string) error {
 func getCanonicalURL(r *http.Request) string {
 	canonical := BaseCanonicalURL + r.URL.EscapedPath()
 
-	// For search results (on the root path), include the query parameters.
-	if (r.URL.Path == "/" || r.URL.Path == "") && r.URL.Query().Get("mode") != "" || r.URL.Query().Get("frase") != "" {
-		canonical += "?" + r.URL.RawQuery
+	// For search results (on the root path), include the mode and frase query parameters.
+	if r.URL.Path == "/" || r.URL.Path == "" {
+		params := url.Values{}
+		mode := r.URL.Query().Get("mode")
+		if mode != "" {
+			params.Set("mode", mode)
+		}
+		frase := r.URL.Query().Get("frase")
+		if frase != "" {
+			params.Set("frase", frase)
+		}
+
+		if len(params) > 0 {
+			canonical += "?" + params.Encode()
+		}
 	}
 
 	return canonical

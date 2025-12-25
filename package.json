@@ -21,10 +21,8 @@
     "lint": "npm run lint:prettier && npm run lint:go"
   },
   "devDependencies": {
-    "esbuild": "0.27.1",
-    "prettier": "3.7.4"
-  },
-  "dependencies": {
+    "esbuild": "0.27.2",
+    "prettier": "3.7.4",
     "tom-select": "2.4.3"
   }
 }
