@@ -5,8 +5,9 @@
 import TomSelect from "tom-select/base";
 import conceptes from "./conceptes.json" with { type: "json" };
 
-const removeCatalanAccents = function (str) {
+const normalizeQuery = function (str) {
   return str
+    .toLocaleLowerCase()
     .replace(/à/g, "a")
     .replace(/[èé]/g, "e")
     .replace(/[íï]/g, "i")
@@ -42,7 +43,7 @@ const tomSelect = new TomSelect("#cerca-concepte", {
   onType(query) {
     this.clearOptions();
     if (query.length) {
-      const normalizedQuery = removeCatalanAccents(query.toLocaleLowerCase());
+      const normalizedQuery = normalizeQuery(query);
 
       // Separate options into two categories:
       // 1. Those that start with the normalized query.
@@ -52,9 +53,7 @@ const tomSelect = new TomSelect("#cerca-concepte", {
       const otherOptions = [];
 
       conceptes.forEach((option) => {
-        const normalizedText = removeCatalanAccents(
-          option.value.toLocaleLowerCase(),
-        );
+        const normalizedText = normalizeQuery(option.value);
         if (normalizedText.startsWith(normalizedQuery)) {
           matchedOptions.push(option);
         } else if (normalizedText.includes(normalizedQuery)) {
