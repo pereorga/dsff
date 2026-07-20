@@ -33,7 +33,7 @@ var (
 	MainTemplate     *template.Template
 )
 
-//go:embed templates/*
+//go:embed templates/*.html templates/pages/*.html
 var TemplateFS embed.FS
 
 var (
@@ -57,7 +57,12 @@ func main() {
 		len(AllEntries), len(ConceptsByFirstLetter))
 
 	// Parse the HTML templates from the embedded filesystem.
-	MainTemplate = template.Must(template.New("main.html").ParseFS(TemplateFS, "templates/main.html"))
+	// main.html is the layout; templates/pages/*.html define static page partials.
+	MainTemplate = template.Must(template.New("main.html").ParseFS(
+		TemplateFS,
+		"templates/main.html",
+		"templates/pages/*.html",
+	))
 	NotFoundTemplate = template.Must(template.New("404.html").ParseFS(TemplateFS, "templates/404.html"))
 
 	// Create a new ServeMux to handle HTTP requests.

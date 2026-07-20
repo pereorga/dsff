@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -192,10 +193,12 @@ func conceptHandler(w http.ResponseWriter, r *http.Request) {
 
 // serveNotFound renders a standard 404 Not Found error page.
 func serveNotFound(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusNotFound)
-
-	err := NotFoundTemplate.Execute(w, nil)
+	var buf bytes.Buffer
+	err := NotFoundTemplate.Execute(&buf, nil)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
+	w.WriteHeader(http.StatusNotFound)
+	_, _ = w.Write(buf.Bytes())
 }

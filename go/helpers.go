@@ -127,14 +127,6 @@ func getAllSources() map[string]string {
 	}
 }
 
-// getObservationSources returns a map of source abbreviations used specifically
-// within the "Observacions" field and their corresponding full text.
-func getObservationSources() map[string]string {
-	return map[string]string{
-		"DIEC1": "Institut d'Estudis Catalans, Diccionari de la Llengua Catalana",
-	}
-}
-
 // getCategory returns the HTML representation of a grammatical category.
 // It takes a category key (e.g., "sv") and returns an HTML string with an
 // <abbr> tag that provides the full category name on hover.
@@ -290,12 +282,6 @@ func replaceSourceAbbreviationsParentheses(text string) string {
 	return createAbbrReplacerInParentheses(getAllSources()).Replace(text)
 }
 
-// replaceObservationsSourceAbbreviations replaces source abbreviations for the "Observacions" field.
-// This is similar to replaceAbbreviations but uses a specific set of sources.
-func replaceObservationsSourceAbbreviations(text string) string {
-	return createAbbrReplacer(getObservationSources()).Replace(text)
-}
-
 // getSources formats a comma-separated string of source abbreviations into an HTML string.
 // Each source is wrapped in an <abbr> tag with its full name as the title.
 // The entire string is enclosed in parentheses.
@@ -318,7 +304,8 @@ func getSources(sources string) string {
 		source = strings.TrimSpace(source)
 		fullForm, exists := allSources[source]
 		if exists {
-			formattedSources = append(formattedSources,
+			formattedSources = append(
+				formattedSources,
 				fmt.Sprintf("<abbr title=\"%s\">%s</abbr>", fullForm, source),
 			)
 		} else {
@@ -424,7 +411,7 @@ func renderBoldPhrases(input string, createLink bool) string {
 
 		phraseHTML := fmt.Sprintf("<strong>%s</strong>", phrase)
 		if shouldCreateLink {
-			searchPath := "/?mode=Conté&frase=" + url.QueryEscape(removeParenthesesContent(phrase))
+			searchPath := "/?mode=" + SearchModeConte + "&frase=" + url.QueryEscape(removeParenthesesContent(phrase))
 			phraseHTML = fmt.Sprintf("<a href=\"%s\" rel=\"nofollow\">%s</a>", searchPath, phraseHTML)
 		}
 
@@ -454,7 +441,9 @@ func renderConceptsByLetter(concepts []string) string {
 	var html strings.Builder
 	html.WriteString(`<ul class="list-unstyled">`)
 	for _, concept := range concepts {
-		fmt.Fprintf(&html, `<li class="mb-3"><a class="concepte" href="/concepte/%s">%s</a></li>`,
+		fmt.Fprintf(
+			&html,
+			`<li class="mb-3"><a class="concepte" href="/concepte/%s">%s</a></li>`,
 			getConceptSlug(concept),
 			getConceptTitleHTML(concept),
 		)
@@ -520,7 +509,9 @@ func renderEntriesForSearch(entries []Entry) string {
 
 	for _, entry := range entries {
 		htmlOutput.WriteString(`<article class="entry frase">`)
-		fmt.Fprintf(&htmlOutput, `<h2 class="concepte"><a href="/concepte/%s">%s</a></h2>`,
+		fmt.Fprintf(
+			&htmlOutput,
+			`<h2 class="concepte"><a href="/concepte/%s">%s</a></h2>`,
 			getConceptSlug(entry.Concepte),
 			getConceptTitleHTML(entry.Concepte),
 		)
@@ -546,7 +537,9 @@ func renderSingleEntry(entry Entry) string {
 		phraseHTML = getPhrase(entry.Title)
 	}
 
-	fmt.Fprintf(&htmlOutput, `<p>%s %s, %s %s</p>`,
+	fmt.Fprintf(
+		&htmlOutput,
+		`<p>%s %s, %s %s</p>`,
 		phraseHTML,
 		getCategory(entry.Categoria),
 		entry.Definicio,
@@ -554,31 +547,43 @@ func renderSingleEntry(entry Entry) string {
 	)
 
 	if entry.Exemples != "" {
-		fmt.Fprintf(&htmlOutput, "<p>%s %s</p>",
+		fmt.Fprintf(
+			&htmlOutput,
+			"<p>%s %s</p>",
 			replaceAbbreviationsParentheses(entry.Exemples),
 			getSources(entry.FontExemples),
 		)
 	}
 	if entry.Sinonims != "" {
-		fmt.Fprintf(&htmlOutput, `<p><span class="simbol">→</span>%s</p>`,
+		fmt.Fprintf(
+			&htmlOutput,
+			`<p><span class="simbol">→</span>%s</p>`,
 			replaceAbbreviationsParentheses(renderBoldPhrases(entry.Sinonims, true)),
 		)
 	}
 	if entry.AltresRelacions != "" {
-		fmt.Fprintf(&htmlOutput, `<p><span class="simbol">▷</span>%s</p>`,
+		fmt.Fprintf(
+			&htmlOutput,
+			`<p><span class="simbol">▷</span>%s</p>`,
 			replaceAbbreviationsParentheses(renderBoldPhrases(entry.AltresRelacions, true)),
 		)
 	}
 	if entry.VariantsDialectals != "" {
-		fmt.Fprintf(&htmlOutput, `<p><span class="simbol simbol-punt">•</span>%s</p>`,
-			replaceAbbreviations(renderBoldPhrases(entry.VariantsDialectals, false)),
+		fmt.Fprintf(
+			&htmlOutput,
+			`<p><span class="simbol simbol-punt">•</span>%s</p>`,
+			replaceSourceAbbreviationsParentheses(replaceAbbreviations(renderBoldPhrases(entry.VariantsDialectals, false))),
 		)
 	}
 	if entry.MarcatgeDialectal != "" {
 		fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceSourceAbbreviationsParentheses(replaceAbbreviations(entry.MarcatgeDialectal)))
 	}
 	if entry.Observacions != "" {
-		fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceObservationsSourceAbbreviations(entry.Observacions))
+		// Bare DIEC1 is common ("mot no registrat al DIEC1"); other sources use parentheses.
+		observacions := createAbbrReplacer(map[string]string{
+			"DIEC1": getAllSources()["DIEC1"],
+		}).Replace(entry.Observacions)
+		fmt.Fprintf(&htmlOutput, `<p>[%s]</p>`, replaceSourceAbbreviationsParentheses(observacions))
 	}
 
 	return htmlOutput.String()

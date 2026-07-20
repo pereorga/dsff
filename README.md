@@ -12,11 +12,11 @@ Source code for the online version of the Diccionari de Sinònims de Frases Fete
 
 ### Option 2: Native Build with Go
 
-- Go 1.24+
+- Go 1.25+
 
 ### Development (optional)
 
-- Go 1.24+
+- Go 1.25+
 - Node.js (for dependency management and scripts)
 
 ## Building and Running
@@ -58,11 +58,11 @@ Codi font de la versió en línia del Diccionari de Sinònims de Frases Fetes ([
 
 ### Opció 2: compilació nativa amb Go
 
-- Go 1.24+
+- Go 1.25+
 
 ### Desenvolupament (opcional)
 
-- Go 1.24+
+- Go 1.25+
 - Node.js (per a la gestió de dependències i scripts)
 
 ## Compilació i execució

@@ -12,7 +12,7 @@
     "build:css": "esbuild assets/css/main.css --bundle --minify --outfile=public/css/main.min.css",
     "build:js": "esbuild assets/js/search.js --bundle --minify --outfile=public/js/search.min.js",
     "compress:assets": "node scripts/compress.js public/css/main.min.css public/js/search.min.js",
-    "build": "(cd go/ && go build -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",
+    "build": "(cd go/ && go build -trimpath -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",
     "fix:go": "(cd go/ && go fmt)",
     "fix:prettier": "prettier --write .",
     "fix": "npm run fix:prettier && npm run fix:go",
@@ -21,8 +21,8 @@
     "lint": "npm run lint:prettier && npm run lint:go"
   },
   "devDependencies": {
-    "esbuild": "0.27.3",
-    "prettier": "3.8.1",
+    "esbuild": "0.28.1",
+    "prettier": "3.9.5",
     "tom-select": "2.4.3"
   }
 }
