@@ -11,7 +11,7 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const compressFile = async function (inputPath, compressor, extension) {
+async function compressFile(inputPath, compressor, extension) {
   const outputPath = `${inputPath}.${extension}`;
 
   try {
@@ -28,9 +28,9 @@ const compressFile = async function (inputPath, compressor, extension) {
     );
     process.exit(1);
   }
-};
+}
 
-const compressFiles = async function () {
+async function compressFiles() {
   for (const file of files) {
     const gzipOptions = {
       level: constants.Z_BEST_COMPRESSION,
@@ -39,6 +39,6 @@ const compressFiles = async function () {
     await compressFile(file, createGzip(gzipOptions), "gz");
     await compressFile(file, createBrotliCompress(), "br");
   }
-};
+}
 
 compressFiles().catch(console.error);

@@ -7,12 +7,10 @@
 /* Bootstrap 4 CSS (bootstrap@4.6.2), processed with PurgeCSS to remove unused styles. */
 @import url("bootstrap4.purged.css");
 
-/* Include Tom Select CSS file for Bootstrap 4. */
-@import url("../../node_modules/tom-select/dist/css/tom-select.bootstrap4.css");
-
 :root {
   --color-primary: #760c28;
   --color-primary-light: #fcd18b;
+  --focus-shadow: 0 0 0 0.2rem rgb(118 12 40 / 15%);
 }
 
 .container {
@@ -180,6 +178,37 @@ h2 {
   border-color: var(--color-primary) !important;
 }
 
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.form-control:focus,
+.form-check-input:focus,
+.custom-select:focus {
+  border-color: #ced4da;
+  box-shadow: var(--focus-shadow);
+}
+
+.btn:focus,
+.btn.active:focus {
+  outline: 0;
+  box-shadow: var(--focus-shadow);
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: var(--focus-shadow) !important;
+}
+
+.navbar-toggler:focus-visible,
+.navbar-toggler:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(252 209 139 / 50%);
+}
+
 .search-section {
   margin-bottom: 1rem;
 }
@@ -201,38 +230,50 @@ table {
   }
 }
 
-.ts-dropdown [data-selectable] .highlight {
-  font-weight: 700;
-  background: unset;
+.concept-search {
+  position: relative;
 }
 
-.ts-wrapper.single {
-  .ts-control {
-    &:not(.rtl)::after {
-      right: 0.75rem;
-    }
-
-    &,
-    input {
-      cursor: unset;
-    }
-
-    input::placeholder {
-      color: #6c757d;
-      opacity: 1;
-    }
-  }
+.concept-search:has(.autocomplete-container.active .autocomplete-item)
+  .form-control {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
-.ts-control,
-.ts-control input,
-.ts-dropdown {
-  color: #495057;
-}
-
-#cerca-concepte {
-  color: #6c757d;
+.autocomplete-container {
+  position: absolute;
+  inset: 100% 0 auto;
+  z-index: 1000;
+  display: none;
+  max-height: 300px;
+  overflow-y: auto;
   background: #fff;
+  border: 1px solid #ced4da;
+  border-top: 0;
+  border-radius: 0 0 0.25rem 0.25rem;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+}
+
+.autocomplete-container.active {
+  display: block;
+}
+
+.autocomplete-item {
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: 0;
+}
+
+.autocomplete-item.selected {
+  background-color: #e9ecef;
+}
+
+.autocomplete-item .highlight {
+  font-weight: 700;
 }
 
 .pagination {

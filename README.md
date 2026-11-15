@@ -4,7 +4,7 @@ _Catalan version available below / Versió en català disponible a continuació_
 
 Source code for the online version of the Diccionari de Sinònims de Frases Fetes (Dictionary of Synonyms of Idiomatic Expressions) ([DSFF](https://dsff.uab.cat/)).
 
-## Dependencies
+## Requirements
 
 ### Option 1: Running with Docker
 
@@ -12,12 +12,12 @@ Source code for the online version of the Diccionari de Sinònims de Frases Fete
 
 ### Option 2: Native Build with Go
 
-- Go 1.25+
+- Go
 
-### Development (optional)
+### Development
 
-- Go 1.25+
-- Node.js (for dependency management and scripts)
+- Go
+- Node.js (for the build scripts)
 
 ## Building and Running
 
@@ -30,7 +30,7 @@ docker compose up
 ### Option 2 (Go)
 
 ```
-cd go/ && go build -o ../dsff && cd ..
+(cd go/ && go build -o ../dsff)
 ./dsff
 ```
 
@@ -50,7 +50,7 @@ For more details about the dictionary credits, see: [https://dsff.uab.cat/credit
 
 Codi font de la versió en línia del Diccionari de Sinònims de Frases Fetes ([DSFF](https://dsff.uab.cat/)).
 
-## Dependències
+## Requeriments
 
 ### Opció 1: execució amb Docker
 
@@ -58,12 +58,12 @@ Codi font de la versió en línia del Diccionari de Sinònims de Frases Fetes ([
 
 ### Opció 2: compilació nativa amb Go
 
-- Go 1.25+
+- Go
 
-### Desenvolupament (opcional)
+### Desenvolupament
 
-- Go 1.25+
-- Node.js (per a la gestió de dependències i scripts)
+- Go
+- Node.js (pels scripts)
 
 ## Compilació i execució
 
@@ -76,7 +76,7 @@ docker compose up
 ### Opció 2 (Go)
 
 ```
-cd go/ && go build -o ../dsff && cd ..
+(cd go/ && go build -o ../dsff)
 ./dsff
 ```
 

@@ -30,6 +30,7 @@ type Entry struct {
 type PageData struct {
 	Title        string
 	CanonicalURL string
+	AssetVersion string
 
 	// Flags to indicate the page being rendered
 	IsHomepage         bool

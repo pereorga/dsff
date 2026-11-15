@@ -2,8 +2,11 @@ package main
 
 import (
 	"compress/gzip"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -16,10 +19,27 @@ import (
 	"golang.org/x/text/language"
 )
 
+// computeAssetVersion returns a short content hash of the given files, used to
+// invalidate browser caches when the minified assets change. Missing files are
+// skipped so the server can still start if an optional asset is absent.
+func computeAssetVersion(paths ...string) string {
+	hash := sha256.New()
+	for _, path := range paths {
+		file, err := os.Open(path)
+		if err != nil {
+			continue
+		}
+		_, _ = io.Copy(hash, file)
+		_ = file.Close()
+	}
+	return hex.EncodeToString(hash.Sum(nil))[:12]
+}
+
 // precompressedFileHandler serves pre-compressed .br or .gz files when the client accepts those encodings.
 // This is more efficient than runtime compression, especially for static files.
 func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setImmutableCacheHeaders(w)
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Vary", "Accept-Encoding")
 		acceptEncoding := r.Header.Get("Accept-Encoding")
@@ -49,6 +69,21 @@ func precompressedFileHandler(originalPath, contentType string) http.HandlerFunc
 		// Fall back to serving the original uncompressed file
 		http.ServeFile(w, r, originalPath)
 	}
+}
+
+// setImmutableCacheHeaders tells browsers and shared caches that static assets
+// can be reused for a year without revalidation.
+func setImmutableCacheHeaders(w http.ResponseWriter) {
+	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+}
+
+// cachedFileServer serves files with long-lived immutable cache headers.
+func cachedFileServer(root string) http.Handler {
+	fileServer := http.FileServer(http.Dir(root))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		setImmutableCacheHeaders(w)
+		fileServer.ServeHTTP(w, r)
+	})
 }
 
 // getServerAddress returns the server address from the PORT env variable.
@@ -178,13 +213,13 @@ func loadDataFromFile(filePath string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open data file %s: %w", filePath, err)
 	}
-	defer file.Close()
+	defer file.Close() //nolint:errcheck // read-only file
 
 	gzipReader, err := gzip.NewReader(file)
 	if err != nil {
 		return fmt.Errorf("failed to create gzip reader: %w", err)
 	}
-	defer gzipReader.Close()
+	defer gzipReader.Close() //nolint:errcheck // decode already reports read errors
 
 	err = json.NewDecoder(gzipReader).Decode(&AllEntries)
 	if err != nil {
@@ -197,6 +232,10 @@ func loadDataFromFile(filePath string) error {
 	// Populate data structures for efficient lookups.
 	for _, entry := range AllEntries {
 		PhrasesMap[removeParenthesesContent(entry.Title)] = true
+
+		if entry.Concepte == "" {
+			continue
+		}
 
 		// Group concepts by their first letter for alphabetical browsing.
 		firstRune := []rune(entry.Concepte)[0]
@@ -350,11 +389,15 @@ func smartSplit(input, separator string) []string {
 	var parenthesesDepth int
 
 	for _, char := range input {
-		if char == '(' {
+		switch char {
+		case '(':
 			parenthesesDepth++
-		} else if char == ')' {
+		case ')':
 			parenthesesDepth--
-		} else if string(char) == separator && parenthesesDepth > 0 {
+		default:
+		}
+
+		if string(char) == separator && parenthesesDepth > 0 {
 			processedBuilder.WriteString(placeholderUnusedChar)
 			continue
 		}

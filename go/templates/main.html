@@ -6,7 +6,7 @@
   <meta name="description" content="Diccionari de Sinònims de Frases Fetes (DSFF), de M.Teresa Espinal">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#760c28">
-  <link rel="stylesheet" href="/main.min.css">
+  <link rel="stylesheet" href="/css/main.min.css{{if .AssetVersion}}?v={{.AssetVersion}}{{end}}">
   {{- if .CanonicalURL -}}
     <link rel="canonical" href="{{ .CanonicalURL }}">
   {{- end -}}
@@ -56,7 +56,9 @@
         <label for="cerca-concepte">Cerca per concepte</label>
         <div class="form-row">
           <div class="form-group col-md-4">
-            <select id="cerca-concepte" class="form-control custom-select"><option>Introduïu un concepte</option></select>
+            <div class="concept-search">
+              <input type="search" id="cerca-concepte" class="form-control" placeholder="Introduïu un concepte" autocomplete="off" autocapitalize="off">
+            </div>
           </div>
         </div>
       </div>
@@ -115,7 +117,7 @@
   </div>
   <footer class="mt-4">
     <div class="container text-center">
-      <p><a href="//www.uab.cat"><img alt="Logo UAB" title="Universitat Autònoma de Barcelona" src="/uab.svg" width="150" height="56"></a></p>
+      <p><a href="//www.uab.cat"><img alt="Logo UAB" title="Universitat Autònoma de Barcelona" src="/img/uab.svg" width="150" height="56"></a></p>
       <p class="mt-4"><small>&copy; 2025 M.Teresa Espinal</small></p>
     </div>
   </footer>
@@ -124,10 +126,10 @@
   {{- if .IsHomepage -}}
     {{/*
       search.min.js includes:
-      - Custom code for the concept selector and search (js/search.js), including Tom Select dependency
+      - Custom code for the concept selector and search (js/search.js)
       - Concept list (js/conceptes.json)
     */}}
-    <script defer src="/search.min.js"></script>
+    <script defer src="/js/search.min.js{{if .AssetVersion}}?v={{.AssetVersion}}{{end}}"></script>
   {{- end -}}
 </body>
 </html>

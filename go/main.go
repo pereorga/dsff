@@ -25,8 +25,9 @@ const (
 	SearchModeCoincident = "Coincident"
 )
 
-// BuildDate is set at compile time to indicate when the binary was built.
-var BuildDate string
+// AssetVersion is a content hash of the minified CSS and JavaScript assets.
+// It is appended to asset URLs to invalidate browser caches when they change.
+var AssetVersion string
 
 var (
 	NotFoundTemplate *template.Template
@@ -56,6 +57,9 @@ func main() {
 	log.Printf("Loaded %d entries, covering %d initial letters.\n",
 		len(AllEntries), len(ConceptsByFirstLetter))
 
+	// Hash the minified assets so asset URLs change only when their contents do.
+	AssetVersion = computeAssetVersion("public/css/main.min.css", "public/js/search.min.js")
+
 	// Parse the HTML templates from the embedded filesystem.
 	// main.html is the layout; templates/pages/*.html define static page partials.
 	MainTemplate = template.Must(template.New("main.html").ParseFS(
@@ -81,19 +85,17 @@ func main() {
 	// These are handled individually to avoid showing the annoying default
 	// directory file listing.
 	//
-	// TODO:
-	//  - Set long cache headers for static assets (JS, CSS, images). But then:
-	//  - Append cache-busting query strings or version hashes to CSS/JS URLs.
-	//
-	// Default browser cache behaviour, although unpredictable, is acceptable. So
-	// this may stay as it is. File sizes are also relatively small.
-	mux.HandleFunc("GET /main.min.css", precompressedFileHandler("public/css/main.min.css", "text/css"))
-	mux.HandleFunc("GET /search.min.js", precompressedFileHandler("public/js/search.min.js", "application/javascript"))
-	mux.Handle("GET /by-nc-sa.svg", http.FileServer(http.Dir("public/img/")))
-	mux.Handle("GET /uab.svg", http.FileServer(http.Dir("public/img/")))
-	mux.Handle("GET /favicon.ico", http.FileServer(http.Dir("public/")))
-	mux.Handle("GET /opensearch.xml", http.FileServer(http.Dir("public/")))
-	mux.Handle("GET /robots.txt", http.FileServer(http.Dir("public/")))
+	// Include the build date in minified asset URLs to invalidate browser caches
+	// when a new binary is deployed.
+	mux.HandleFunc("GET /css/main.min.css", precompressedFileHandler("public/css/main.min.css", "text/css"))
+	mux.HandleFunc("GET /js/search.min.js", precompressedFileHandler("public/js/search.min.js", "application/javascript"))
+	cachedPublicFiles := cachedFileServer("public/")
+	publicFiles := http.FileServer(http.Dir("public/"))
+	mux.Handle("GET /img/by-nc-sa.svg", cachedPublicFiles)
+	mux.Handle("GET /img/uab.svg", cachedPublicFiles)
+	mux.Handle("GET /favicon.ico", cachedPublicFiles)
+	mux.Handle("GET /opensearch.xml", publicFiles)
+	mux.Handle("GET /robots.txt", publicFiles)
 
 	// Handle legacy /cerca URL by redirecting to the homepage.
 	// This ensures that old bookmarks and search engine links continue to work.

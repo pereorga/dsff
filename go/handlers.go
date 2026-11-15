@@ -35,10 +35,16 @@ func basicPageHandler(title string) http.HandlerFunc {
 			// No-op
 		}
 
-		err := MainTemplate.Execute(w, pageData)
-		if err != nil {
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-		}
+		renderPage(w, pageData)
+	}
+}
+
+// renderPage executes the main template and reports any rendering error.
+func renderPage(w http.ResponseWriter, pageData PageData) {
+	pageData.AssetVersion = AssetVersion
+	err := MainTemplate.Execute(w, pageData)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
 }
 
@@ -55,11 +61,6 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		serveNotFound(w)
 		return
-	}
-
-	// Add build date header to the homepage for debugging and tracking purposes.
-	if BuildDate != "" {
-		w.Header().Set("X-Build-Date", BuildDate)
 	}
 
 	query := r.URL.Query().Get("frase")
@@ -100,10 +101,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = MainTemplate.Execute(w, pageData)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
+	renderPage(w, pageData)
 }
 
 // letterHandler handles requests for browsing dictionary entries by the first letter of a concept.
@@ -134,10 +132,7 @@ func letterHandler(w http.ResponseWriter, r *http.Request) {
 		CanonicalURL: getCanonicalURL(r),
 	}
 
-	err := MainTemplate.Execute(w, pageData)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
+	renderPage(w, pageData)
 }
 
 // conceptHandler handles requests for displaying all phrases related to a specific concept.
@@ -185,10 +180,7 @@ func conceptHandler(w http.ResponseWriter, r *http.Request) {
 		CanonicalURL:  getCanonicalURL(r),
 	}
 
-	err := MainTemplate.Execute(w, pageData)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
+	renderPage(w, pageData)
 }
 
 // serveNotFound renders a standard 404 Not Found error page.

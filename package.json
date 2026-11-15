@@ -8,21 +8,20 @@
   "repository": "https://github.com/pereorga/dsff.git",
   "bugs": "https://github.com/pereorga/dsff/issues",
   "scripts": {
+    "build": "(cd go/ && go build -trimpath -buildvcs=false -ldflags=\"-s -w\" -o ../dsff)",
     "build:assets": "npm run build:css && npm run build:js && npm run compress:assets",
     "build:css": "esbuild assets/css/main.css --bundle --minify --outfile=public/css/main.min.css",
     "build:js": "esbuild assets/js/search.js --bundle --minify --outfile=public/js/search.min.js",
     "compress:assets": "node scripts/compress.js public/css/main.min.css public/js/search.min.js",
-    "build": "(cd go/ && go build -trimpath -buildvcs=false -ldflags=\"-s -w -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\" -o ../dsff)",
+    "fix": "npm run fix:prettier && npm run fix:go",
     "fix:go": "(cd go/ && go fmt)",
     "fix:prettier": "prettier --write .",
-    "fix": "npm run fix:prettier && npm run fix:go",
+    "lint": "npm run lint:prettier && npm run lint:go",
     "lint:go": "(cd go/ && go vet && gofmt -d .)",
-    "lint:prettier": "prettier --check .",
-    "lint": "npm run lint:prettier && npm run lint:go"
+    "lint:prettier": "prettier --check ."
   },
   "devDependencies": {
-    "esbuild": "0.28.1",
-    "prettier": "3.9.5",
-    "tom-select": "2.4.3"
+    "esbuild": "0.28.2",
+    "prettier": "3.9.10"
   }
 }
